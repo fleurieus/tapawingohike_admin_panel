@@ -1,11 +1,13 @@
 "use client"
 import {ColumnDef} from "@tanstack/react-table"
-import {FaEdit} from "react-icons/fa";
-import {FaDeleteLeft, FaTrash} from "react-icons/fa6";
+import {FaTrash} from "react-icons/fa6";
+import {EditOrCreateDialog} from "@/app/(dashboard)/organisations/EditOrCreateDialog";
 
 export type Organisation = {
   "id": number,
   "name": string,
+  "contactPerson": string,
+  "contactEmail": string,
 }
 
 export const columns: ColumnDef<Organisation>[] = [
@@ -18,19 +20,22 @@ export const columns: ColumnDef<Organisation>[] = [
     header: "Organisation",
   },
   {
+    accessorKey: "contactPerson",
+    header: "Contact Person",
+  },
+  {
+    accessorKey: "contactEmail",
+    header: "Contact Email",
+  },
+  {
     id: "actions",
     cell: ({row}) => {
       const organisation = row.original
       return (
         <div className="flex space-x-2">
-          <button
-            onClick={() => {
-              console.log("Edit", organisation)
-            }}
-            className="text-blue-500"
-          >
-            <FaEdit/>
-          </button>
+          <EditOrCreateDialog
+            value={organisation}>
+          </EditOrCreateDialog>
           <button
             onClick={() => {
               console.log("Delete", organisation)

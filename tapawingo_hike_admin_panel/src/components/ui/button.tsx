@@ -1,10 +1,11 @@
-import { ButtonHTMLAttributes } from 'react';
+import React, { ButtonHTMLAttributes, ForwardRefRenderFunction } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
-const Button: React.FC<ButtonProps> = ({ children, ...props }) => {
+const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = ({ children, ...props }, ref) => {
   return (
       <button
+          ref={ref}
           className="w-full bg-tapawingo_green text-white py-2 px-4 rounded"
           {...props}
       >
@@ -13,4 +14,4 @@ const Button: React.FC<ButtonProps> = ({ children, ...props }) => {
   );
 };
 
-export default Button;
+export default React.forwardRef(Button);

@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import Button from "./button"
-import OutlinedButton from "@/components/outlined-button";
+import OutlinedButton from "@/components/ui/outlined-button";
 import {useState} from "react";
 
 interface DataTableProps<TData, TValue> {
