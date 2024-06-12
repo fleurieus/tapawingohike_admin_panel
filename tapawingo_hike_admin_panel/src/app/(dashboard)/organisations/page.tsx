@@ -21,7 +21,6 @@ export default async function Organisations() {
   return (
       <main className="flex min-h-screen items-center justify-center bg-gray-100">
         <div className="w-full max-w-screen-xl">
-          {/* EditOrCreateDialog rechts boven de DataTable */}
           <div className="flex justify-end mb-4">
             <EditOrCreateDialog value={undefined}></EditOrCreateDialog>
           </div>
