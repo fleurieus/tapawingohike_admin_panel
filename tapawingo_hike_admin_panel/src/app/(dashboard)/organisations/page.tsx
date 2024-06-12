@@ -20,11 +20,12 @@ async function getData(): Promise<Organisation[]> {
 export default async function Organisations() {
   const data = await getData();
   return (
-      <main className="flex min-h-screen items-center justify-center bg-gray-100">
-        <div className="w-full max-w-screen-xl">
+      <main className="flex min-h-screen items-start justify-center bg-gray-100">
+        <div className="flex flex-col items-end space-y-4 p-4">
           <EditOrCreateDialog value={undefined}></EditOrCreateDialog>
           <DataTable columns={columns} data={data}/>
         </div>
       </main>
+
   )
 }

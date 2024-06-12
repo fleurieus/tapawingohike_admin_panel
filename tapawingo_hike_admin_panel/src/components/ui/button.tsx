@@ -6,7 +6,7 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = ({ chil
   return (
       <button
           ref={ref}
-          className="w-full bg-tapawingo_green text-white py-2 px-4 rounded"
+          className="bg-tapawingo_green text-white py-2 px-4 rounded"
           {...props}
       >
         {children}
