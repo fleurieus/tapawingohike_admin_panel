@@ -1,11 +1,10 @@
-"use client"
-
 import {
   ColumnDef,
   flexRender,
-  getCoreRowModel, getPaginationRowModel,
+  getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -14,14 +13,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import Button from "./button"
+} from "@/components/ui/table";
+import Button from "./button";
 import OutlinedButton from "@/components/ui/outlined-button";
-import {useState} from "react";
+import { useState, useEffect } from "react";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
 export function DataTable<TData, TValue>({
@@ -33,42 +32,44 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-  })
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data]);
 
   const handleNextPage = () => {
     if (table.getCanNextPage()) {
       table.nextPage();
-      setCurrentPage(prevPage => prevPage + 1);
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
   const handlePreviousPage = () => {
     if (table.getCanPreviousPage()) {
       table.previousPage();
-      setCurrentPage(prevPage => prevPage - 1);
+      setCurrentPage((prevPage) => prevPage - 1);
     }
   };
 
   return (
-      <div className="rounded-md border w-[1000px]">
-        <Table>
+      <div className="rounded-md border w-full overflow-hidden">
+        <Table className="w-full">
           <TableHeader className="bg-tapawingo_green">
             {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                        <TableHead key={header.id} className="text-white font-bold">
-                          {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                              )}
-                        </TableHead>
-                    )
-                  })}
+                  {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id} className="text-white font-bold">
+                        {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                            )}
+                      </TableHead>
+                  ))}
                 </TableRow>
             ))}
           </TableHeader>
@@ -81,7 +82,10 @@ export function DataTable<TData, TValue>({
                     >
                       {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id}>
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                            )}
                           </TableCell>
                       ))}
                     </TableRow>
@@ -101,13 +105,13 @@ export function DataTable<TData, TValue>({
           </div>
           <div className="flex space-x-2 p-4">
             <OutlinedButton
-                onClick={() => handlePreviousPage()}
+                onClick={handlePreviousPage}
                 disabled={!table.getCanPreviousPage()}
             >
               Previous
             </OutlinedButton>
             <Button
-                onClick={() => handleNextPage()}
+                onClick={handleNextPage}
                 disabled={!table.getCanNextPage()}
             >
               Next
@@ -115,5 +119,5 @@ export function DataTable<TData, TValue>({
           </div>
         </div>
       </div>
-  )
+  );
 }
