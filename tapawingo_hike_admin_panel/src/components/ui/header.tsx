@@ -4,7 +4,7 @@ import React from 'react';
 import DynamicBreadcrumb from './dynamicBreadcrumb';
 import "./../pageLayout.css"
 
-const Header: React.FC<HeaderProps> = () => {
+const Header = () => {
   return (
     <header className="pageHeader">
       <DynamicBreadcrumb />

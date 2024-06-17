@@ -19,15 +19,10 @@ async function getOrganisations(): Promise<Organisation[]> {
   return await response.json();
 }
 
-const headerProps = {
-    title: 'Home Page',
-    subtitle: 'Welcome to the home page',
-};
-
 export default async function OrganisationsPage() {
   const data = await getOrganisations();
 
-  return (<Layout headerProps={headerProps}>
+  return (<Layout>
     <OrganisationsClient initialData={data} />
   </Layout>);
 }
