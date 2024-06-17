@@ -3,13 +3,9 @@ import Header from '@/components/ui/header';
 
 interface LayoutProps {
   children: ReactNode;
-  headerProps: {
-    title?: string;
-    subtitle?: string;
-  };
 }
 
-const Layout = ({ children, headerProps }: LayoutProps) => {
+const Layout = ({ children }: LayoutProps) => {
   return (
     <div>
       <Header />
