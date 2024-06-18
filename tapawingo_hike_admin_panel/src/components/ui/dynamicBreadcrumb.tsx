@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import "./../pageLayout.css";
 import {
   Breadcrumb,
@@ -17,15 +16,20 @@ const DynamicBreadcrumb = () => {
   const pathname = usePathname();
   const path = pathname.split('/').filter((crumb) => crumb);
 
-  const breadcrumbItems = [];
+  const breadcrumbItems: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.JSX.Element[] = [];
   path.forEach((crumb, index) => {
     const href = '/' + path.slice(0, index + 1).join('/');
-
+    
     breadcrumbItems.push(
-      <BreadcrumbItem key={href}>
-        <BreadcrumbLink href={href}>{crumb}</BreadcrumbLink>
-      </BreadcrumbItem>
-    );
+          <BreadcrumbItem key={href}>
+            {/* @ts-ignore ignore this because of how javascript interprets numbers in strings, the numbers being id's that shouldn't be clickable and thus filtered out. */}
+            {isNaN(crumb) ? (
+              <BreadcrumbLink href={href}>{crumb}</BreadcrumbLink>
+            ) : (
+              <BreadcrumbPage>{crumb}</BreadcrumbPage>
+            )}
+          </BreadcrumbItem>
+        );
 
     if (index < path.length - 1) {
       breadcrumbItems.push(

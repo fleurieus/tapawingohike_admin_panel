@@ -11,12 +11,13 @@ import Button from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Organisation } from '@/types/organisation';
+import { Event } from '@/types/event';
 import { FaEdit } from "react-icons/fa";
 import React, { useState, useEffect } from "react";
 
 type EditOrCreateDialogProps = {
-  value?: Organisation;
-  onSave: (data: Organisation, isEdit: boolean) => void;
+  value?: Event;
+  onSave: (data: Event, isEdit: boolean) => void;
 };
 
 export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
@@ -29,10 +30,11 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const updatedValue: Organisation = {
+    const updatedValue: Event = {
       id: value?.id,
       name,
     };
+    setName("");
     onSave(updatedValue, isEdit);
   };
 
@@ -42,7 +44,7 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
           {isEdit ? (
               <button><FaEdit /></button>
           ) : (
-              <Button type="button">Create Organisation</Button>
+              <Button type="button">Create Event</Button>
           )}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -70,7 +72,7 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">{isEdit ? "Save changes" : "Create organisation"}</Button>
+              <Button type="submit">{isEdit ? "Save changes" : "Create event"}</Button>
             </DialogFooter>
           </form>
         </DialogContent>
