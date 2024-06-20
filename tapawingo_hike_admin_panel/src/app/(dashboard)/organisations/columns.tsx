@@ -3,7 +3,7 @@ import {FaTrash} from "react-icons/fa6";
 import {EditOrCreateDialog} from './editOrCreateDialog';
 import {Organisation} from '@/types/organisation';
 import {API_BASE_URL} from '@/lib/utils';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
 export type ColumnsProps = {
   data: Organisation[];
@@ -11,7 +11,7 @@ export type ColumnsProps = {
 };
 
 export const useOrganisationColumns = ({onChange}: ColumnsProps) => {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleUpdate = async (organisation: Organisation) => {
     await fetch(`${API_BASE_URL}/organisations/${organisation.id}`, {
