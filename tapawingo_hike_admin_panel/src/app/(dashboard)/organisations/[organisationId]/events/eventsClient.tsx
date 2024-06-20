@@ -3,20 +3,23 @@
 import { useState, useCallback } from 'react';
 import { EditOrCreateDialog } from './editOrCreateEventDialog';
 import { DataTable } from '@/components/ui/data-table';
-import { Event, Organisation } from '@/types/*';
+import { Organisation } from '@/types/organisation';
+import { Event } from '@/types/event';
 import { API_BASE_URL } from '@/lib/utils';
 import { useEventColumns } from './eventColumns';
 
 type EventsClientProps = {
-  initialOrganisation: Organisation
-  initialData: Event[];
+  initialData: {
+    organisationData: Organisation; // Adjust if organisationData is an array or different type
+    eventData: Event[];
+  };
 };
 
 const EventsClient = ({ initialData }: EventsClientProps) => {
   const [organisationData, setOrganisationData] = useState<Organisation>(initialData.organisationData);
   const [eventData, setEventData] = useState<Event[]>(initialData.eventData);
 
-  const refreshData = useCallback(async (id:number) => {
+  const refreshData = useCallback(async (id:number | undefined) => {
     const response = await fetch(`${API_BASE_URL}/organisations/${id}/events`, {
       method: 'GET',
       headers: {
@@ -28,7 +31,7 @@ const EventsClient = ({ initialData }: EventsClientProps) => {
     setEventData(newData);
   }, []);
 
-  const handleCreate = async (id: number, event: Event) => {
+  const handleCreate = async (id: number | undefined, event: Event) => {
     await fetch(`${API_BASE_URL}/organisations/${id}/events`, {
       method: 'POST',
       headers: {
@@ -36,11 +39,12 @@ const EventsClient = ({ initialData }: EventsClientProps) => {
       },
       body: JSON.stringify(event),
     });
-    await refreshData(organisationData.id);
+    await refreshData(id);
   };
 
   const { columns } = useEventColumns({
     eventData,
+    organisationData,
     onChange: refreshData,
   });
 

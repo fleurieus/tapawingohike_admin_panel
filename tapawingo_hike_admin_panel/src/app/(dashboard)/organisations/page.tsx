@@ -1,6 +1,7 @@
 import { Organisation } from '@/types/organisation';
 import { API_BASE_URL } from '@/lib/utils';
 import OrganisationsClient from './organisationsClient';
+import Layout from '@/components/pageLayout';
 
 async function getOrganisations(): Promise<Organisation[]> {
   const response = await fetch(`${API_BASE_URL}/organisations`, {
@@ -21,5 +22,7 @@ async function getOrganisations(): Promise<Organisation[]> {
 export default async function OrganisationsPage() {
   const data = await getOrganisations();
 
-  return <OrganisationsClient initialData={data} />;
+  return (<Layout>
+    <OrganisationsClient initialData={data} />
+  </Layout>);
 }
