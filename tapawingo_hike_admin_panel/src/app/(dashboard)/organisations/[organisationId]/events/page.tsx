@@ -1,6 +1,8 @@
-import { Organisation, Event } from '@/types/*';
+import { Organisation } from '@/types/organisation';
+import { Event } from '@/types/event';
 import { API_BASE_URL } from '@/lib/utils';
 import EventsClient from './eventsClient';
+import Layout from '@/components/pageLayout';
 
 async function getOrganisations(organisationId: number): Promise<Organisation> {
   const response = await fetch(`${API_BASE_URL}/organisations/${organisationId}`, {
@@ -36,12 +38,11 @@ async function getEvents(organisationId: number): Promise<Event[]> {
     return await response.json();
 }
 
-export default async function EventsPage({ params }: { params: { organisationId: string } }) {
+export default async function EventsPage({ params }: { params: { organisationId: number } }) {
   const organisationData = await getOrganisations(params.organisationId);
   const eventData = await getEvents(params.organisationId);
 
-  console.log("organisationData from getOrganisations: ", organisationData);
-  console.log("eventData from getEvents: ", eventData);
-
-  return <EventsClient initialData={{organisationData, eventData}}  />;
+  return (<Layout>
+    <EventsClient initialData={{organisationData, eventData}} />
+  </Layout>);
 }
