@@ -4,6 +4,7 @@ import {EditOrCreateDialog} from './editOrCreateEventDialog';
 import { Organisation } from '@/types/organisation';
 import { Event } from '@/types/event';
 import {API_BASE_URL} from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export type ColumnsProps = {
   organisationData: Organisation
@@ -12,6 +13,7 @@ export type ColumnsProps = {
 };
 
 export const useEventColumns = ({organisationData, onChange}: ColumnsProps) => {
+  const router = useRouter();
 
   const handleUpdate = async (organisation: Organisation, event: Event) => {
 
@@ -35,10 +37,22 @@ export const useEventColumns = ({organisationData, onChange}: ColumnsProps) => {
     onChange(orgId);
   };
 
+  const handleCellClick = (organisationId: number, eventId: number) => {
+    router.push(`/organisations/${organisationId}/events/${eventId}/editions`);
+  };
+
   const columns: ColumnDef<Event>[] = [
     {
       accessorKey: "name",
       header: "Event Name",
+      cell: ({ row }) => (
+        <div
+          className="cursor-pointer"
+          onClick={() => handleCellClick(organisationData.id, row.original.id)}
+        >
+          {row.getValue('name')}
+        </div>
+      ),
     },
     {
       id: "actions",
