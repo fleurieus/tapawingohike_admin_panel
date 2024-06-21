@@ -87,7 +87,7 @@ export const useEditionColumns = ({organisationId, eventData, onChange}: Columns
             <div className="flex space-x-2">
               <EditOrCreateDialog
                   value={edition}
-                  onSave={(event) => handleUpdate(eventData, edition)}
+                  onSave={(edition) => handleUpdate(eventData, edition)}
               />
               <button
                   onClick={() => handleDelete(eventData.id, edition.id)}
