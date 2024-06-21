@@ -41,8 +41,10 @@ async function getEditions(eventId: string): Promise<Edition[]> {
 export default async function EventsPage({ params }: { params: { organisationId: string, eventId: string } }) {
   const eventData = await getEvent(params.organisationId, params.eventId);
   const editionData = await getEditions(params.eventId);
+  // you can not put the params directly into the initialData of the client so define the id here
+  const organisationId = params.organisationId;
 
   return (<Layout>
-    <EditionsClient initialData={{eventData, editionData}} />
+    <EditionsClient initialData={{organisationId, eventData, editionData}} />
   </Layout>);
 }
