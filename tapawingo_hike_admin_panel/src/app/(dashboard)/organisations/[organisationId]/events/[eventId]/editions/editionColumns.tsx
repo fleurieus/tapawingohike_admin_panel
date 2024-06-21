@@ -1,6 +1,6 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {FaTrash} from "react-icons/fa6";
-import {EditOrCreateDialog} from './editOrCreateEditionsDialog';
+import {EditOrCreateDialog} from './editOrCreateEditionDialog';
 import { Event } from '@/types/event';
 import { Edition } from "@/types/edition";
 import {API_BASE_URL} from '@/lib/utils';

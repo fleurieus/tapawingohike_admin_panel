@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from 'react';
-import { EditOrCreateDialog } from './editOrCreateEditionsDialog';
+import { EditOrCreateDialog } from './editOrCreateEditionDialog';
 import { DataTable } from '@/components/ui/data-table';
 import { Event } from '@/types/event';
 import { Edition } from '@/types/edition';
