@@ -1,27 +1,27 @@
 "use client";
 
 import { useState, useCallback } from 'react';
-import { EditOrCreateDialog } from './editOrCreateEditionDialog';
+import { EditOrCreateDialog } from './editOrCreateRouteDialog';
 import { DataTable } from '@/components/ui/data-table';
 import { Event } from '@/types/event';
 import { Edition } from '@/types/edition';
 import { API_BASE_URL } from '@/lib/utils';
-import { useEditionColumns } from './editionColumns';
+import { useRouteColumns } from './routeColumns';
+import { Route } from '@/types/route';
 
 type EventsClientProps = {
   initialData: {
-    organisationId: string
-    eventData: Event; 
-    editionData: Edition[];
+    editionData: Edition; 
+    routeData: Route[];
   };
 };
 
 const EditionsClient = ({ initialData }: EventsClientProps) => {
-  const [eventData, setEventData] = useState<Event>(initialData.eventData);
-  const [editionData, setEditionData] = useState<Edition[]>(initialData.editionData);
+  const [editionData, setEventData] = useState<Edition>(initialData.editionData);
+  const [routeData, setEditionData] = useState<Route[]>(initialData.routeData);
 
   const refreshData = useCallback(async (id:number | undefined) => {
-    const response = await fetch(`${API_BASE_URL}/events/${id}/editions`, {
+    const response = await fetch(`${API_BASE_URL}/editions/${id}/routes`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const EditionsClient = ({ initialData }: EventsClientProps) => {
   }, []);
 
   const handleCreate = async (id: number | undefined, event: Event) => {
-    await fetch(`${API_BASE_URL}/events/${id}/editions`, {
+    await fetch(`${API_BASE_URL}/editions/${id}/routes`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,18 +43,17 @@ const EditionsClient = ({ initialData }: EventsClientProps) => {
     await refreshData(id);
   };
 
-  const { columns } = useEditionColumns({
-    organisationId: initialData.organisationId,
+  const { columns } = useRouteColumns({
+    routeData: routeData,
     editionData: editionData,
-    eventData: eventData,
     onChange: refreshData,
   });
 
   return (
       <main className="flex min-h-screen items-start justify-center bg-gray-100">
         <div className="flex flex-col items-end space-y-4 p-4">
-          <EditOrCreateDialog onSave={(event) => handleCreate(eventData.id, event)} />
-          <DataTable columns={columns} data={editionData} />
+          <EditOrCreateDialog onSave={(event) => handleCreate(editionData.id, event)} />
+          <DataTable columns={columns} data={routeData} />
         </div>
       </main>
   );

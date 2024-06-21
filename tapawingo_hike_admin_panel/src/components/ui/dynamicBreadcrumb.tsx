@@ -14,6 +14,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Edition } from '@/types/edition';
+import { Route } from '@/types/route';
+import { Team } from '@/types/team';
 
 const DynamicBreadcrumb = () => {
   const pathname = usePathname();
@@ -26,6 +29,9 @@ const DynamicBreadcrumb = () => {
       const items: React.ReactElement[] = [];
       let organisationId = '';
       let eventId = '';
+      let editionId = '';
+      let routeId = '';
+      let teamId = '';
 
       for (let index = 0; index < path.length; index++) {
         const crumb = path[index];
@@ -38,11 +44,23 @@ const DynamicBreadcrumb = () => {
             switch (parentType) {
               case 'organisations':
                 organisationId = crumb;
-                isNumberCrumb = await getOrganisations(crumb);
+                isNumberCrumb = await getOrganisation(crumb);
                 break;
               case 'events':
                 eventId = crumb;
-                isNumberCrumb = await getEvents(organisationId, eventId);
+                isNumberCrumb = await getEvent(organisationId, crumb);
+                break;
+              case 'editions':
+                editionId = crumb;
+                isNumberCrumb = await getEdition(eventId, crumb);
+                break;
+              case 'routes':
+                routeId = crumb;
+                isNumberCrumb = await getRoute(editionId, crumb);
+                break;
+              case 'teams':
+                teamId = crumb;
+                isNumberCrumb = await getTeam(editionId, crumb);
                 break;
               default:
                 break;
@@ -87,7 +105,7 @@ const DynamicBreadcrumb = () => {
 
 export default DynamicBreadcrumb;
 
-async function getOrganisations(organisationId: string): Promise<Organisation> {
+async function getOrganisation(organisationId: string): Promise<Organisation> {
   const response = await fetch(`${API_BASE_URL}/organisations/${organisationId}`, {
     method: 'GET',
     headers: {
@@ -103,8 +121,56 @@ async function getOrganisations(organisationId: string): Promise<Organisation> {
   return await response.json();
 }
 
-async function getEvents(organisationId: string, eventId: string): Promise<Event> {
+async function getEvent(organisationId: string, eventId: string): Promise<Event> {
   const response = await fetch(`${API_BASE_URL}/organisations/${organisationId}/events/${eventId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    cache: 'no-store'
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+async function getEdition(eventId: string, editionId: string): Promise<Edition> {
+  const response = await fetch(`${API_BASE_URL}/events/${eventId}/editions/${editionId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    cache: 'no-store'
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+async function getRoute(editionId: string, routeId: string): Promise<Route> {
+  const response = await fetch(`${API_BASE_URL}editions/${editionId}/routes/${routeId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    cache: 'no-store'
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+async function getTeam(editionId: string, routeId: string): Promise<Team> {
+  const response = await fetch(`${API_BASE_URL}editions/${editionId}/teams/${routeId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

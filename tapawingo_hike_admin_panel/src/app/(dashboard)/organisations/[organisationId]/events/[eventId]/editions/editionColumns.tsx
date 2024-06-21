@@ -4,14 +4,17 @@ import {EditOrCreateDialog} from './editOrCreateEditionDialog';
 import { Event } from '@/types/event';
 import { Edition } from "@/types/edition";
 import {API_BASE_URL} from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export type ColumnsProps = {
+  organisationId: string
   eventData: Event
   editionData: Edition[];
   onChange: (id: number | undefined) => void;
 };
 
-export const useEditionColumns = ({eventData, onChange}: ColumnsProps) => {
+export const useEditionColumns = ({organisationId, eventData, onChange}: ColumnsProps) => {
+  const router = useRouter();
 
   const handleUpdate = async (event: Event, edition: Edition) => {
 
@@ -35,18 +38,46 @@ export const useEditionColumns = ({eventData, onChange}: ColumnsProps) => {
     onChange(eventId);
   };
 
+  const handleCellClick = (organisationId: string, eventId: number, editionId: number) => {
+    router.push(`/organisations/${organisationId}/events/${eventId}/editions/${editionId}/routes`);
+  };
+
   const columns: ColumnDef<Edition>[] = [
     {
       accessorKey: "name",
       header: "Name",
+      cell: ({ row }) => (
+        <div
+          className="cursor-pointer"
+          onClick={() => handleCellClick(organisationId, eventData.id, row.original.id)}
+        >
+          {row.getValue('name')}
+        </div>
+      ),
     },
     {
       accessorKey: "startDate",
       header: "Start date",
+      cell: ({ row }) => (
+        <div
+          className="cursor-pointer"
+          onClick={() => handleCellClick(organisationId, eventData.id, row.original.id)}
+        >
+          {row.getValue('startDate')}
+        </div>
+      ),
     },
     {
       accessorKey: "endDate",
       header: "End date",
+      cell: ({ row }) => (
+        <div
+          className="cursor-pointer"
+          onClick={() => handleCellClick(organisationId, eventData.id, row.original.id)}
+        >
+          {row.getValue('endDate')}
+        </div>
+      ),
     },
     {
       id: "actions",
@@ -56,7 +87,7 @@ export const useEditionColumns = ({eventData, onChange}: ColumnsProps) => {
             <div className="flex space-x-2">
               <EditOrCreateDialog
                   value={edition}
-                  onSave={(event) => handleUpdate(eventData, event)}
+                  onSave={(event) => handleUpdate(eventData, edition)}
               />
               <button
                   onClick={() => handleDelete(eventData.id, edition.id)}
