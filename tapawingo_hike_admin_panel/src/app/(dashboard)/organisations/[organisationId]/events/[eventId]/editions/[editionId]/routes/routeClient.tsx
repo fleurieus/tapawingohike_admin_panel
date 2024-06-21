@@ -52,7 +52,7 @@ const EditionsClient = ({ initialData }: EventsClientProps) => {
   return (
       <main className="flex min-h-screen items-start justify-center bg-gray-100">
         <div className="flex flex-col items-end space-y-4 p-4">
-          <EditOrCreateDialog onSave={(event) => handleCreate(editionData.id, event)} />
+          <EditOrCreateDialog onSave={(route) => handleCreate(editionData.id, route)} />
           <DataTable columns={columns} data={routeData} />
         </div>
       </main>
