@@ -35,9 +35,9 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
     event.preventDefault();
     const updatedValue: Organisation = {
       id: value?.id,
-      name,
-      contactPerson,
-      contactEmail,
+      name: name,
+      contactPerson: contactPerson,
+      contactEmail: contactEmail,
     };
     onSave(updatedValue, isEdit);
   };

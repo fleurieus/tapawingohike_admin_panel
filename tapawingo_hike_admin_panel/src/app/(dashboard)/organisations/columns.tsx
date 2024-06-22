@@ -2,7 +2,7 @@ import {ColumnDef} from "@tanstack/react-table";
 import {FaTrash} from "react-icons/fa6";
 import {EditOrCreateDialog} from './editOrCreateDialog';
 import {Organisation} from '@/types/organisation';
-import {API_BASE_URL} from '@/lib/utils';
+import apiClient from "@/lib/apiClient";
 
 export type ColumnsProps = {
   data: Organisation[];
@@ -11,24 +11,21 @@ export type ColumnsProps = {
 
 export const useOrganisationColumns = ({onChange}: ColumnsProps) => {
   const handleUpdate = async (organisation: Organisation) => {
-    await fetch(`${API_BASE_URL}/organisations/${organisation.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(organisation),
-    });
-    onChange();
+    try {
+      await apiClient.patch(`/organisations/${organisation.id}`, organisation);
+      onChange();
+    } catch (error) {
+      console.error('Error updating organisation:', error);
+    }
   };
 
   const handleDelete = async (id: number) => {
-    await fetch(`${API_BASE_URL}/organisations/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    onChange();
+    try {
+      await apiClient.delete(`/organisations/${id}`);
+      onChange();
+    } catch (error) {
+      console.error('Error deleting organisation:', error);
+    }
   };
 
   const columns: ColumnDef<Organisation>[] = [
@@ -69,6 +66,5 @@ export const useOrganisationColumns = ({onChange}: ColumnsProps) => {
       },
     },
   ];
-
   return {columns};
 };

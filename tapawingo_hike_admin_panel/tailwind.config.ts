@@ -19,6 +19,9 @@ const config = {
     },
     extend: {
       colors: {
+        tapawingo_green: "#2F8560",
+        white: "#ffffff",
+        black: "#000000",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
