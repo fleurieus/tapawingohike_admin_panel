@@ -4,8 +4,9 @@ import { useState, useCallback } from 'react';
 import { EditOrCreateDialog } from './editOrCreateDialog';
 import { DataTable } from '@/components/ui/data-table';
 import { Organisation } from '@/types/organisation';
-import { API_BASE_URL } from '@/lib/utils';
 import { useOrganisationColumns } from './columns';
+import apiClient from "@/lib/apiClient";
+import { API_BASE_URL } from '@/lib/utils';
 
 type OrganisationsClientProps = {
   initialData: Organisation[];
@@ -26,15 +27,20 @@ const OrganisationsClient = ({ initialData }: OrganisationsClientProps) => {
     setData(newData);
   }, []);
 
+
   const handleCreate = async (organisation: Organisation) => {
-    await fetch(`${API_BASE_URL}/organisations`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(organisation),
-    });
-    await refreshData();
+    try{
+      await fetch(`http://localhost:5175/organisations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(organisation),
+      });
+      await refreshData();
+    } catch (err){
+      console.error('Error creating organisation:', err);
+    }
   };
 
   const { columns } = useOrganisationColumns({

@@ -1,46 +1,22 @@
 import { Organisation } from '@/types/organisation';
 import { Event } from '@/types/event';
-import { API_BASE_URL } from '@/lib/utils';
 import EventsClient from './eventsClient';
 import Layout from '@/components/pageLayout';
+import apiClient from '@/lib/apiClient';
 
-async function getOrganisations(organisationId: number): Promise<Organisation> {
-  const response = await fetch(`${API_BASE_URL}/organisations/${organisationId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store'
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  return await response.json();
+async function getOrganisation(organisationId: number): Promise<Organisation> {
+  const response = await apiClient.get(`/organisations/${organisationId}`);
+  return response.data;
 }
 
-async function getEvents(organisationId: number): Promise<Event[]> {
-    const response = await fetch(`${API_BASE_URL}/organisations/${organisationId}/events`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    });
-
-    if (response.status == 404) {
-        return [];
-    } else if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
+async function getEventsOnOrganisation(organisationId: number): Promise<Event[]> {
+  const response = await apiClient.get(`/organisations/${organisationId}/events`);
+  return response.data;
 }
 
 export default async function EventsPage({ params }: { params: { organisationId: number } }) {
-  const organisationData = await getOrganisations(params.organisationId);
-  const eventData = await getEvents(params.organisationId);
+  const organisationData = await getOrganisation(params.organisationId);
+  const eventData = await getEventsOnOrganisation(params.organisationId);
 
   return (<Layout>
     <EventsClient initialData={{organisationData, eventData}} />
