@@ -4,6 +4,7 @@ import {EditOrCreateDialog} from './editOrCreateDialog';
 import {Organisation} from '@/types/organisation';
 import { useRouter } from 'next/navigation';
 import apiClient from "@/lib/apiClient";
+import { API_BASE_URL } from "@/lib/utils";
 
 export type ColumnsProps = {
   data: Organisation[];
@@ -15,7 +16,13 @@ export const useOrganisationColumns = ({onChange}: ColumnsProps) => {
 
   const handleUpdate = async (organisation: Organisation) => {
     try {
-      await apiClient.patch(`/organisations/${organisation.id}`, organisation);
+      await fetch(`${API_BASE_URL}/organisations/${organisation.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(organisation),
+      });
       onChange();
     } catch (error) {
       console.error('Error updating organisation:', error);
@@ -24,7 +31,12 @@ export const useOrganisationColumns = ({onChange}: ColumnsProps) => {
 
   const handleDelete = async (id: number) => {
     try {
-      await apiClient.delete(`/organisations/${id}`);
+      await fetch(`${API_BASE_URL}/organisations/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       onChange();
     } catch (error) {
       console.error('Error deleting organisation:', error);

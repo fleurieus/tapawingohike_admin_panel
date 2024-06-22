@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { Organisation } from '@/types/organisation';
 import { Event } from '@/types/event';
 import "./../pageLayout.css";
-import { API_BASE_URL } from '@/lib/utils';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,6 +16,7 @@ import {
 import { Edition } from '@/types/edition';
 import { Route } from '@/types/route';
 import { Team } from '@/types/team';
+import apiClient from '@/lib/apiClient';
 
 const DynamicBreadcrumb = () => {
   const pathname = usePathname();
@@ -106,7 +106,7 @@ const DynamicBreadcrumb = () => {
 export default DynamicBreadcrumb;
 
 async function getOrganisation(organisationId: string): Promise<Organisation> {
-  const response = await fetch(`${API_BASE_URL}/organisations/${organisationId}`, {
+  const response = await fetch(`http://localhost:5175/organisations/${organisationId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ async function getOrganisation(organisationId: string): Promise<Organisation> {
 }
 
 async function getEvent(organisationId: string, eventId: string): Promise<Event> {
-  const response = await fetch(`${API_BASE_URL}/organisations/${organisationId}/events/${eventId}`, {
+  const response = await fetch(`http://localhost:5175/organisations/${organisationId}/events/${eventId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ async function getEvent(organisationId: string, eventId: string): Promise<Event>
 }
 
 async function getEdition(eventId: string, editionId: string): Promise<Edition> {
-  const response = await fetch(`${API_BASE_URL}/events/${eventId}/editions/${editionId}`, {
+  const response = await fetch(`http://localhost:5175/events/${eventId}/editions/${editionId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ async function getEdition(eventId: string, editionId: string): Promise<Edition> 
 }
 
 async function getRoute(editionId: string, routeId: string): Promise<Route> {
-  const response = await fetch(`${API_BASE_URL}editions/${editionId}/routes/${routeId}`, {
+  const response = await fetch(`http://localhost:5175/editions/${editionId}/routes/${routeId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ async function getRoute(editionId: string, routeId: string): Promise<Route> {
 }
 
 async function getTeam(editionId: string, routeId: string): Promise<Team> {
-  const response = await fetch(`${API_BASE_URL}editions/${editionId}/teams/${routeId}`, {
+  const response = await fetch(`http://localhost:5175/editions/${editionId}/teams/${routeId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

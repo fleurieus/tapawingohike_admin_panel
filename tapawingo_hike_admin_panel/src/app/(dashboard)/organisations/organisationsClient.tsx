@@ -6,6 +6,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Organisation } from '@/types/organisation';
 import { useOrganisationColumns } from './columns';
 import apiClient from "@/lib/apiClient";
+import { API_BASE_URL } from '@/lib/utils';
 
 type OrganisationsClientProps = {
   initialData: Organisation[];
@@ -15,20 +16,30 @@ const OrganisationsClient = ({ initialData }: OrganisationsClientProps) => {
   const [data, setData] = useState<Organisation[]>(initialData);
 
   const refreshData = useCallback(async () => {
-    try {
-      const response = await apiClient.get('/organisations');
-      setData(response.data);
-    } catch (error) {
-      console.error('Error fetching organisations:', error);
-    }
+    const response = await fetch(`${API_BASE_URL}/organisations`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store'
+    });
+    const newData = await response.json();
+    setData(newData);
   }, []);
 
+
   const handleCreate = async (organisation: Organisation) => {
-    try {
-      await apiClient.post('/organisations', organisation);
+    try{
+      await fetch(`http://localhost:5175/organisations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(organisation),
+      });
       await refreshData();
-    } catch (error) {
-      console.error('Error creating organisation:', error);
+    } catch (err){
+      console.error('Error creating organisation:', err);
     }
   };
 
