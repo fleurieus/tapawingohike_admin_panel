@@ -1,0 +1,8 @@
+.pageHeader {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    left: 1%;
+    height: 10%;
+}

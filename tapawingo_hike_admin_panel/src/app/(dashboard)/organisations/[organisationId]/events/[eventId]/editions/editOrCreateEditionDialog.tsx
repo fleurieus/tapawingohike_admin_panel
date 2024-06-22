@@ -10,35 +10,45 @@ import {
 import Button from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Organisation } from '@/types/organisation';
+import { Edition } from "@/types/edition";
 import { FaEdit } from "react-icons/fa";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 import React, { useState, useEffect } from "react";
 
 type EditOrCreateDialogProps = {
-  value?: Organisation;
-  onSave: (data: Organisation, isEdit: boolean) => void;
+  value?: Edition;
+  onSave: (data: Edition, isEdit: boolean) => void;
 };
 
 export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
   const isEdit = !!value;
   const [name, setName] = useState(value?.name || "");
-  const [contactPerson, setContactPerson] = useState(value?.contactPerson || "");
-  const [contactEmail, setContactEmail] = useState(value?.contactEmail || "");
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
 
   useEffect(() => {
     setName(value?.name || "");
-    setContactPerson(value?.contactPerson || "");
-    setContactEmail(value?.contactEmail || "");
+    if (value) {
+      setStartDate(new Date(value.startDate));
+      setEndDate(new Date(value.endDate));
+    } else {
+      setStartDate(new Date());
+      setEndDate(new Date());
+    }
   }, [value]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const updatedValue: Organisation = {
+    const updatedValue: Edition = {
       id: value?.id,
-      name: name,
-      contactPerson: contactPerson,
-      contactEmail: contactEmail,
+      name,
+      // @ts-ignore
+      startDate,
+      // @ts-ignore
+      endDate,
     };
+    setName("");
     onSave(updatedValue, isEdit);
   };
 
@@ -48,16 +58,16 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
           {isEdit ? (
               <button><FaEdit /></button>
           ) : (
-              <Button type="button">Create Organisation</Button>
+              <Button type="button">Create edition</Button>
           )}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>{isEdit ? "Edit organisation" : "Create organisation"}</DialogTitle>
+            <DialogTitle>{isEdit ? "Edit edition" : "Create edition"}</DialogTitle>
             <DialogDescription>
               {isEdit
-                  ? "Make changes to your organisation here. Click save when you're done."
-                  : "Fill in the details below to create a new organisation."}
+                  ? "Make changes to your edition here. Click save when you're done."
+                  : "Fill in the details below to create a new edition."}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
@@ -75,31 +85,28 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="contactperson" className="text-right">
-                  Contact Person
+                <Label htmlFor="date" className="text-right">
+                  startDate
                 </Label>
-                <Input
-                    id="contactperson"
-                    value={contactPerson}
-                    onChange={(e) => setContactPerson(e.target.value)}
-                    className="col-span-3"
+                <DayPicker
+                  mode="single"
+                  selected={startDate}
+                  onSelect={setStartDate}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="contactemail" className="text-right">
-                  Contact Email
+                <Label htmlFor="date" className="text-right">
+                  endDate
                 </Label>
-                <Input
-                    id="contactemail"
-                    value={contactEmail}
-                    onChange={(e) => setContactEmail(e.target.value)}
-                    className="col-span-3"
-                    type="email"
+                <DayPicker
+                  mode="single"
+                  selected={endDate}
+                  onSelect={setEndDate}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">{isEdit ? "Save changes" : "Create organisation"}</Button>
+              <Button type="submit">{isEdit ? "Save changes" : "Create edition"}</Button>
             </DialogFooter>
           </form>
         </DialogContent>

@@ -10,35 +10,42 @@ import {
 import Button from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Organisation } from '@/types/organisation';
 import { FaEdit } from "react-icons/fa";
+import "react-day-picker/dist/style.css";
 import React, { useState, useEffect } from "react";
+import { Team } from "@/types/team";
 
 type EditOrCreateDialogProps = {
-  value?: Organisation;
-  onSave: (data: Organisation, isEdit: boolean) => void;
+  value?: Team;
+  onSave: (data: Team, isEdit: boolean) => void;
 };
 
 export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
   const isEdit = !!value;
   const [name, setName] = useState(value?.name || "");
-  const [contactPerson, setContactPerson] = useState(value?.contactPerson || "");
+  const [contactName, setContactName] = useState(value?.contactName || "");
   const [contactEmail, setContactEmail] = useState(value?.contactEmail || "");
+  const [contactPhone, setContactPhone] = useState(value?.contactEmail || "");
 
   useEffect(() => {
     setName(value?.name || "");
-    setContactPerson(value?.contactPerson || "");
+    setContactName(value?.contactName || "");
     setContactEmail(value?.contactEmail || "");
+    setContactPhone(value?.contactPhone || "");
   }, [value]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const updatedValue: Organisation = {
+    const updatedValue: Team = {
       id: value?.id,
-      name: name,
-      contactPerson: contactPerson,
-      contactEmail: contactEmail,
+      code: value?.code || "",
+      name,
+      contactName,
+      contactEmail,
+      contactPhone,
+      online: value?.online || false,
     };
+    setName("");
     onSave(updatedValue, isEdit);
   };
 
@@ -48,16 +55,16 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
           {isEdit ? (
               <button><FaEdit /></button>
           ) : (
-              <Button type="button">Create Organisation</Button>
+              <Button type="button">Create team</Button>
           )}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>{isEdit ? "Edit organisation" : "Create organisation"}</DialogTitle>
+            <DialogTitle>{isEdit ? "Edit team" : "Create team"}</DialogTitle>
             <DialogDescription>
               {isEdit
-                  ? "Make changes to your organisation here. Click save when you're done."
-                  : "Fill in the details below to create a new organisation."}
+                  ? "Make changes to your team here. Click save when you're done."
+                  : "Fill in the details below to create a new team."}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
@@ -75,13 +82,13 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="contactperson" className="text-right">
+                <Label htmlFor="contactname" className="text-right">
                   Contact Person
                 </Label>
                 <Input
-                    id="contactperson"
-                    value={contactPerson}
-                    onChange={(e) => setContactPerson(e.target.value)}
+                    id="contactname"
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
                     className="col-span-3"
                 />
               </div>
@@ -97,9 +104,20 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
                     type="email"
                 />
               </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="contactphone" className="text-right">
+                  Contact Phone number
+                </Label>
+                <Input
+                    id="contactphone"
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    className="col-span-3"
+                />
+              </div>
             </div>
             <DialogFooter>
-              <Button type="submit">{isEdit ? "Save changes" : "Create organisation"}</Button>
+              <Button type="submit">{isEdit ? "Save changes" : "Create team"}</Button>
             </DialogFooter>
           </form>
         </DialogContent>
