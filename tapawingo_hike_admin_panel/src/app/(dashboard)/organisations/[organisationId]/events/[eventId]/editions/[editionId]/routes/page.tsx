@@ -1,4 +1,4 @@
-import EditionsClient from './routeClient';
+import RoutesClient from './routeClient';
 import Layout from '@/components/pageLayout';
 import { Edition } from '@/types/edition';
 import { Route } from '@/types/route';
@@ -14,11 +14,15 @@ async function getRoutes(editionId: string): Promise<Route[]> {
   return response.data;
 }
 
-export default async function EventsPage({ params }: { params: { eventId: string, editionId: string } }) {
+export default async function EventsPage({ params }: { params: {  organisationId: string, eventId: string, editionId: string } }) {
   const editionData = await getEdition(params.eventId, params.editionId);
   const routeData = await getRoutes(params.editionId);
+  // you can not put the params directly into the initialData of the client so define the id here
+  const organisationId = params.organisationId;
+  const eventId = params.eventId
+
 
   return (<Layout>
-    <EditionsClient initialData={{editionData, routeData}} />
+    <RoutesClient initialData={{organisationId, eventId, editionData, routeData}} />
   </Layout>);
 }
