@@ -33,6 +33,8 @@ export function middleware(request: NextRequest) {
 //Here we add all the routes that we want to protect with the middleware
 export const config = {
   matcher: [
-      '/organisations'
+      '/organisations',
+      '/events',
+      '/editions',
   ]
 };
