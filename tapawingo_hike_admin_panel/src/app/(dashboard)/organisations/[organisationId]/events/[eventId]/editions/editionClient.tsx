@@ -8,15 +8,15 @@ import { Edition } from '@/types/edition';
 import { API_BASE_URL } from '@/lib/utils';
 import { useEditionColumns } from './editionColumns';
 
-type EventsClientProps = {
+type EditionsClientProps = {
   initialData: {
-    organisationId: string
+    organisationId: string;
     eventData: Event; 
     editionData: Edition[];
   };
 };
 
-const EditionsClient = ({ initialData }: EventsClientProps) => {
+const EditionsClient = ({ initialData }: EditionsClientProps) => {
   const [eventData, setEventData] = useState<Event>(initialData.eventData);
   const [editionData, setEditionData] = useState<Edition[]>(initialData.editionData);
 

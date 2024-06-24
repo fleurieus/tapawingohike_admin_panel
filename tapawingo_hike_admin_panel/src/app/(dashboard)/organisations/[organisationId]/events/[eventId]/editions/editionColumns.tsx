@@ -38,7 +38,7 @@ export const useEditionColumns = ({organisationId, eventData, onChange}: Columns
     onChange(eventId);
   };
 
-  const handleCellClick = (organisationId: string, eventId: number, editionId: number) => {
+  const handleCellClick = (organisationId: string, eventId: number| undefined, editionId: number | undefined) => {
     router.push(`/organisations/${organisationId}/events/${eventId}/editions/${editionId}/routes`);
   };
 
