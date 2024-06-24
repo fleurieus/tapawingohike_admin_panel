@@ -4,8 +4,8 @@ import { Team } from "./team"
 export type Edition = {
     id?: number
     name: string
-    startDate: string //Date String
-    endDate: string // Datae String
+    startDate: Date //Date String
+    endDate: Date // Datae String
     routes?: Route[]
     teams?: Team[]
 }
