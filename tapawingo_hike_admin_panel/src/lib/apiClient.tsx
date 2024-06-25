@@ -29,7 +29,7 @@ apiClient.interceptors.response.use(
 
         try {
           const refreshToken = Cookies.get('refreshToken');
-          const response = await axios.post('http://localhost:5175/api/auth/refresh-token', { token: refreshToken });
+          const response = await axios.post('http://localhost:5175/auth/refresh', { token: refreshToken });
 
           if (response.status === 200) {
             const { jwtToken, refreshToken, expiration } = response.data;
