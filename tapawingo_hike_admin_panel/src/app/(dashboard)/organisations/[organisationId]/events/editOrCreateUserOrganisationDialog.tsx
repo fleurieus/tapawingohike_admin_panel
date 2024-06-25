@@ -102,7 +102,7 @@ export function EditOrCreateUserOrganisationDialog({
                     required
                 />
               </div>
-              <div>
+              <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="email" className="text-right">
                   Email
                 </Label>
@@ -120,6 +120,7 @@ export function EditOrCreateUserOrganisationDialog({
                 </Label>
                 <Input
                     id="password"
+                    type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="col-span-3"
