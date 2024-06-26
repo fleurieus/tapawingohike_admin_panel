@@ -22,17 +22,19 @@ export function middleware(request: NextRequest) {
     '/editions': ['SuperAdmin', 'OrganisationManager', 'OrganisationUser', 'EventManager', 'EventUser'],
   };
 
-  for (const [path, allowedRoles] of Object.entries(restrictedPaths)) {
-    if (request.nextUrl.pathname.startsWith(path) && !roles.some(role => allowedRoles.includes(role))) {
-      return NextResponse.redirect(new URL('/forbidden', request.url));
-    }
-  }
+  // for (const [path, allowedRoles] of Object.entries(restrictedPaths)) {
+  //   if (request.nextUrl.pathname.startsWith(path) && !roles.some(role => allowedRoles.includes(role))) {
+  //     return NextResponse.redirect(new URL('/forbidden', request.url));
+  //   }
+  // }
   return NextResponse.next();
 }
 
 //Here we add all the routes that we want to protect with the middleware
 export const config = {
   matcher: [
-      '/organisations'
+      '/organisations',
+      '/events',
+      '/editions',
   ]
 };
