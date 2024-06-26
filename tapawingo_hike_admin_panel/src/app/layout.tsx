@@ -2,7 +2,6 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import React from "react";
-import Sidebar from "@/components/ui/sidebar";
 import Header from "@/components/ui/header";
 
 const inter = Inter({subsets: ["latin"]});
@@ -18,14 +17,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-      <body className={inter.className}>
-      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-        <Sidebar/>
-        <Header/>
-        {children}
-      </div>
-      </body>
-      </html>
+        <html lang="en">
+        <body className={inter.className}>
+        <div>
+          <Header/>
+          {children}
+        </div>
+        </body>
+        </html>
   );
 }

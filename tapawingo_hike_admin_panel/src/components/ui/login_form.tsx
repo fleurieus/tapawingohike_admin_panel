@@ -7,6 +7,17 @@ import React, {useState} from "react";
 import Cookies from "js-cookie";
 import {API_BASE_URL} from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import {useUser} from "@/context/userContext";
+import {jwtDecode} from "jwt-decode";
+
+interface JwtPayload {
+  [key: string]: any;
+}
+
+const extractRole = (payload: JwtPayload): string | null => {
+  const roleEntry = Object.entries(payload).find(([key]) => key.endsWith('Role'));
+  return roleEntry ? roleEntry[1] : null;
+};
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +25,7 @@ const LoginForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setRole } = useUser();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -47,6 +59,10 @@ const LoginForm = () => {
         sameSite: 'Strict',
       });
       Cookies.set('tokenExpiration', expiration);
+
+      const decodedToken = jwtDecode<JwtPayload>(jwtToken);
+      const extractedRole = extractRole(decodedToken);
+      setRole(extractedRole);
       router.push('/organisations')
     } catch (error) {
       console.error('Login error:', error);

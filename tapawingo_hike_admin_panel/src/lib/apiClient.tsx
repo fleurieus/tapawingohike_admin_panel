@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
 import {API_BASE_URL} from "@/lib/utils";
 
 const apiClient = axios.create({
@@ -44,7 +43,6 @@ apiClient.interceptors.response.use(
 
             apiClient.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
             originalRequest.headers['Authorization'] = `Bearer ${jwtToken}`;
-
             return apiClient(originalRequest);
           }
         } catch (error) {
