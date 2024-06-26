@@ -42,7 +42,7 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
       <Dialog>
         <DialogTrigger asChild>
           {isEdit ? (
-              <button><FaEdit /></button>
+              <button> <FaEdit /></button>
           ) : (
               <Button type="button">Create Event</Button>
           )}

@@ -1,5 +1,3 @@
-"use client";
-
 import Cookies from 'js-cookie';
 import apiClient from './apiClient';
 import {useEffect, useRef} from "react";
