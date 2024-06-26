@@ -57,6 +57,10 @@ export const useTeamColumns = ({editionData, onChange}: ColumnsProps) => {
       header: "Contact Phone number",
     },
     {
+      accessorKey: "online",
+      header: "online status"
+    },
+    {
       id: "actions",
       cell: ({row}) => {
         const team = row.original;

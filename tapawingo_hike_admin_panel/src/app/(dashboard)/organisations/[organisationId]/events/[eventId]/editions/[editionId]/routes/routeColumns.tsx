@@ -4,14 +4,18 @@ import {EditOrCreateDialog} from './editOrCreateRouteDialog';
 import { Edition } from "@/types/edition";
 import { Route } from "@/types/route";
 import {API_BASE_URL} from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 export type ColumnsProps = {
+  organisationId: string
+  eventId: string
   editionData: Edition
   routeData: Route[];
   onChange: (id: number | undefined) => void;
 };
 
-export const useRouteColumns = ({editionData, onChange}: ColumnsProps) => {
+export const useRouteColumns = ({organisationId, eventId, editionData, onChange}: ColumnsProps) => {
+  const router = useRouter();
 
   const handleUpdate = async (edition: Edition, route: Route) => {
 
@@ -35,10 +39,22 @@ export const useRouteColumns = ({editionData, onChange}: ColumnsProps) => {
     onChange(editionId);
   };
 
+  const handleCellClick = (organisationId: string, eventId: string, editionId: number | undefined, routeId: number | undefined) => {
+    router.push(`/organisations/${organisationId}/events/${eventId}/editions/${editionId}/routes/${routeId}/routeparts`);
+  };
+
   const columns: ColumnDef<Route>[] = [
     {
       accessorKey: "name",
       header: "Name",
+      cell: ({ row }) => (
+        <div
+          className="cursor-pointer"
+          onClick={() => handleCellClick(organisationId, eventId, editionData.id, row.original.id)}
+        >
+          {row.getValue('name')}
+        </div>
+      ),
     },
     {
       id: "actions",
