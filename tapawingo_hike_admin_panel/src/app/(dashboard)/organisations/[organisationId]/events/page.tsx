@@ -3,7 +3,7 @@ import { Event } from '@/types/event';
 import EventsClient from './eventsClient';
 import Layout from '@/components/pageLayout';
 import apiClient from '@/lib/apiClient';
-import {User} from "@/types/user";
+import {OrganisationUser} from "@/types/organisationUser";
 
 async function getOrganisation(organisationId: number): Promise<Organisation> {
   const response = await apiClient.get(`/organisations/${organisationId}`);
@@ -15,7 +15,7 @@ async function getEventsOnOrganisation(organisationId: number): Promise<Event[]>
   return response.data;
 }
 
-async function getUsersOnOrganisation(organisationId: number): Promise<User[]> {
+async function getUsersOnOrganisation(organisationId: number): Promise<OrganisationUser[]> {
   const response = await apiClient.get(`/organisations/${organisationId}/users`);
   return response.data;
 }

@@ -11,7 +11,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {
   useUserOrganisationColumns
 } from "@/app/(dashboard)/organisations/[organisationId]/events/userOrganisationColumns";
-import {User} from "@/types/user";
+import {OrganisationUser} from "@/types/organisationUser";
 import apiClient from "@/lib/apiClient";
 import {
   EditOrCreateUserOrganisationDialog
@@ -21,13 +21,13 @@ type EventsClientProps = {
   initialData: {
     organisationData: Organisation; // Adjust if organisationData is an array or different type
     eventData: Event[];
-    userOrganisationData: User[];
+    userOrganisationData: OrganisationUser[];
   };
 };
 const EventsClient = ({initialData}: EventsClientProps) => {
   const [organisationData, setOrganisationData] = useState<Organisation>(initialData.organisationData);
   const [eventData, setEventData] = useState<Event[]>(initialData.eventData);
-  const [userOrganisationData, setUserOrganisationData] = useState<User[]>(initialData.userOrganisationData);
+  const [userOrganisationData, setUserOrganisationData] = useState<OrganisationUser[]>(initialData.userOrganisationData);
 
   const refreshData = useCallback(async (id: number | undefined) => {
     const response = await fetch(`${API_BASE_URL}/organisations/${id}/events`, {
@@ -46,7 +46,7 @@ const EventsClient = ({initialData}: EventsClientProps) => {
     setUserOrganisationData(response.data);
   }, []);
 
-  const handleCreateUserOrganisation = async (id: number | undefined, user: User) => {
+  const handleCreateUserOrganisation = async (id: number | undefined, user: OrganisationUser) => {
     try {
       await apiClient.post(`/organisations/${id}/users`, user);
       await refreshUserOrganisationData(id);

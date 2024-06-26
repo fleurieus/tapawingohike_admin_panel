@@ -1,4 +1,4 @@
-import {User} from "@/types/user";
+import {OrganisationUser} from "@/types/organisationUser";
 import {ColumnDef} from "@tanstack/react-table";
 import {Organisation} from "@/types/organisation";
 import {
@@ -9,7 +9,7 @@ import apiClient from "@/lib/apiClient";
 
 export type ColumnsProps = {
   organisationData: Organisation;
-  data: User[];
+  data: OrganisationUser[];
   onChange: (id: number | undefined) => void;
 };
 
@@ -20,12 +20,12 @@ export const useUserOrganisationColumns = ({organisationData, onChange}: Columns
     onChange(organisationData.id);
   }
 
-  const handleUpdate = async (organisation: Organisation, user: User) => {
+  const handleUpdate = async (organisation: Organisation, user: OrganisationUser) => {
     await apiClient.patch(`/organisations/${organisation.id}/users/${user.id}`, user);
     onChange(organisation.id);
   }
 
-  const userOrganisationColumns: ColumnDef<User>[] = [
+  const userOrganisationColumns: ColumnDef<OrganisationUser>[] = [
     {
       accessorKey: "firstName",
       header: "First name",
