@@ -5,7 +5,8 @@ import {
   EditOrCreateUserOrganisationDialog
 } from "@/app/(dashboard)/organisations/[organisationId]/events/editOrCreateUserOrganisationDialog";
 import {FaTrash} from "react-icons/fa6";
-import apiClient from "@/lib/apiClient";
+import apiClient from "@/lib/apiClientServer";
+import apiClientClient from "@/lib/apiClientClient";
 
 export type ColumnsProps = {
   organisationData: Organisation;
@@ -16,12 +17,12 @@ export type ColumnsProps = {
 export const useUserOrganisationColumns = ({organisationData, onChange}: ColumnsProps) => {
 
   const handleDelete = async (id: number) => {
-    await apiClient.delete(`/organisations/${organisationData.id}/users/${id}`);
+    await apiClientClient.delete(`/organisations/${organisationData.id}/users/${id}`);
     onChange(organisationData.id);
   }
 
   const handleUpdate = async (organisation: Organisation, user: OrganisationUser) => {
-    await apiClient.patch(`/organisations/${organisation.id}/users/${user.id}`, user);
+    await apiClientClient.patch(`/organisations/${organisation.id}/users/${user.id}`, user);
     onChange(organisation.id);
   }
 
