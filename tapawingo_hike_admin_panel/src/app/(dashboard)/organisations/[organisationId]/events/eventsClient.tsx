@@ -12,10 +12,11 @@ import {
   useUserOrganisationColumns
 } from "@/app/(dashboard)/organisations/[organisationId]/events/userOrganisationColumns";
 import {OrganisationUser} from "@/types/organisationUser";
-import apiClient from "@/lib/apiClient";
+import apiClient from "@/lib/apiClientServer";
 import {
   EditOrCreateUserOrganisationDialog
 } from "@/app/(dashboard)/organisations/[organisationId]/events/editOrCreateUserOrganisationDialog";
+import apiClientClient from "@/lib/apiClientClient";
 
 type EventsClientProps = {
   initialData: {
@@ -30,25 +31,19 @@ const EventsClient = ({initialData}: EventsClientProps) => {
   const [userOrganisationData, setUserOrganisationData] = useState<OrganisationUser[]>(initialData.userOrganisationData);
 
   const refreshData = useCallback(async (id: number | undefined) => {
-    const response = await fetch(`${API_BASE_URL}/organisations/${id}/events`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    });
-    const newData = await response.json();
+    const response = await apiClientClient.get(`/organisations/${id}/events`);
+    const newData = await response.data;
     setEventData(newData);
   }, []);
 
   const refreshUserOrganisationData = useCallback(async (id: number | undefined) => {
-    const response = await apiClient.get(`/organisations/${id}/users`);
+    const response = await apiClientClient.get(`/organisations/${id}/users`);
     setUserOrganisationData(response.data);
   }, []);
 
   const handleCreateUserOrganisation = async (id: number | undefined, user: OrganisationUser) => {
     try {
-      await apiClient.post(`/organisations/${id}/users`, user);
+      await apiClientClient.post(`/organisations/${id}/users`, user);
       await refreshUserOrganisationData(id);
       return Promise.resolve();
     } catch (error: any) {
@@ -56,13 +51,7 @@ const EventsClient = ({initialData}: EventsClientProps) => {
     }
   };
   const handleCreate = async (id: number | undefined, event: Event) => {
-    await fetch(`${API_BASE_URL}/organisations/${id}/events`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(event),
-    });
+    await apiClientClient.post(`/organisations/${id}/events`, event);
     await refreshData(id);
   };
 

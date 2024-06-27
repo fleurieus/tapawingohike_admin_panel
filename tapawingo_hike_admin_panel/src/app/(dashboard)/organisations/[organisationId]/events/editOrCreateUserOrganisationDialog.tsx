@@ -124,7 +124,6 @@ export function EditOrCreateUserOrganisationDialog({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="col-span-3"
-                    required
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">

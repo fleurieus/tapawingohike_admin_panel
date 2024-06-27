@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import apiClient from './apiClient';
+import apiClient from './apiClientServer';
 import {useEffect, useRef} from "react";
 
 export const checkTokenExpiration = async () => {
@@ -38,7 +38,7 @@ export const refreshAuthToken = async () => {
       });
     }
   } catch (error) {
-    console.error('Token refresh failed:', error);
+    console.error('Token refresh.ts failed:', error);
   }
 };
 export function useTokenRefreshInterval(callback: () => void, delay: number) {

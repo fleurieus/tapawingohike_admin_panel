@@ -15,6 +15,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import apiClientClient from "@/lib/apiClientClient";
 
 type RoutesClientProps = {
   initialData: {
@@ -31,25 +32,13 @@ const RoutesClient = ({ initialData }: RoutesClientProps) => {
   const router = useRouter();
 
   const refreshData = useCallback(async (id:number | undefined) => {
-    const response = await fetch(`${API_BASE_URL}/editions/${id}/routes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    });
-    const newData = await response.json();
+    const response = await apiClientClient.get(`/editions/${id}/routes`)
+    const newData = await response.data;
     setRouteData(newData);
   }, []);
 
   const handleCreate = async (id: number | undefined, event: Event) => {
-    await fetch(`${API_BASE_URL}/editions/${id}/routes`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(event),
-    });
+    await apiClientClient.post(`/editions/${id}/routes`, event)
     await refreshData(id);
   };
 

@@ -16,7 +16,8 @@ import {
 import { Edition } from '@/types/edition';
 import { Route } from '@/types/route';
 import { Team } from '@/types/team';
-import apiClient from '@/lib/apiClient';
+import apiClient from '@/lib/apiClientServer';
+import ApiClientClient from "@/lib/apiClientClient";
 
 const DynamicBreadcrumb = () => {
   const pathname = usePathname();
@@ -106,81 +107,47 @@ const DynamicBreadcrumb = () => {
 export default DynamicBreadcrumb;
 
 async function getOrganisation(organisationId: string): Promise<Organisation> {
-  const response = await fetch(`http://localhost:5175/organisations/${organisationId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store'
-  });
-
-  if (!response.ok) {
+  const response = await ApiClientClient.get(`/organisations/${organisationId}`);
+  if (response.status.toString().startsWith('4')) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
-
-  return await response.json();
+  return await response.data;
 }
 
 async function getEvent(organisationId: string, eventId: string): Promise<Event> {
-  const response = await fetch(`http://localhost:5175/organisations/${organisationId}/events/${eventId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store'
-  });
-
-  if (!response.ok) {
+  const response = await ApiClientClient.get(`/organisations/${organisationId}/events/${eventId}`);
+  if (response.status.toString().startsWith('4')) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return await response.json();
+  return await response.data;
 }
 
 async function getEdition(eventId: string, editionId: string): Promise<Edition> {
-  const response = await fetch(`http://localhost:5175/events/${eventId}/editions/${editionId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store'
-  });
+  const response = await ApiClientClient.get(`/events/${eventId}/editions/${editionId}`);
 
-  if (!response.ok) {
+  if (response.status.toString().startsWith('4')) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return await response.json();
+  return await response.data;
 }
 
 async function getRoute(editionId: string, routeId: string): Promise<Route> {
-  const response = await fetch(`http://localhost:5175/editions/${editionId}/routes/${routeId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store'
-  });
-
-  if (!response.ok) {
+  const response = await ApiClientClient.get(`/editions/${editionId}/routes/${routeId}`);
+  if (response.status.toString().startsWith('4')){
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return await response.json();
+  return await response.data;
 }
 
 async function getTeam(editionId: string, routeId: string): Promise<Team> {
-  const response = await fetch(`http://localhost:5175/editions/${editionId}/teams/${routeId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store'
-  });
+  const response = await ApiClientClient.get(`/editions/${editionId}/teams/${routeId}`);
 
-  if (!response.ok) {
+  if (response.status.toString().startsWith('4')) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  return await response.json();
+  return await response.data;
 }

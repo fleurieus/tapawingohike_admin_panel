@@ -4,6 +4,7 @@ import {EditOrCreateDialog} from './editOrCreateRouteDialog';
 import { Edition } from "@/types/edition";
 import { Route } from "@/types/route";
 import {API_BASE_URL} from '@/lib/utils';
+import apiClientClient from "@/lib/apiClientClient";
 
 export type ColumnsProps = {
   editionData: Edition
@@ -14,24 +15,12 @@ export type ColumnsProps = {
 export const useRouteColumns = ({editionData, onChange}: ColumnsProps) => {
 
   const handleUpdate = async (edition: Edition, route: Route) => {
-
-    await fetch(`${API_BASE_URL}/editions/${edition.id}/routes/${route.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(route),
-    });
+    await apiClientClient.patch(`/editions/${edition.id}/routes/${route.id}`, route);
     onChange(edition.id);
   };
 
   const handleDelete = async (editionId: number | undefined, routeId: number | undefined) => {
-    await fetch(`${API_BASE_URL}/editions/${editionId}/routes/${routeId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    await apiClientClient.delete(`/editions/${editionId}/routes/${routeId}`)
     onChange(editionId);
   };
 
@@ -48,7 +37,7 @@ export const useRouteColumns = ({editionData, onChange}: ColumnsProps) => {
             <div className="flex space-x-2">
               <EditOrCreateDialog
                   value={route}
-                  onSave={(event) => handleUpdate(editionData, route)}
+                  onSave={(route) => handleUpdate(editionData, route)}
               />
               <button
                   onClick={() => handleDelete(editionData.id, route.id)}

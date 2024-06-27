@@ -1,10 +1,10 @@
 import { Organisation } from "@/types/organisation";
-import apiClient from "@/lib/apiClient";
+import apiServerClient from "@/lib/apiClientServer";
 import OrganisationsClient from "@/app/(dashboard)/organisations/organisationsClient";
 import Layout from '@/components/pageLayout';
 
 async function getOrganisations(): Promise<Organisation[]> {
-  const response = await apiClient.get('/organisations');
+  const response = await apiServerClient.get('/organisations');
   return response.data;
 }
 
