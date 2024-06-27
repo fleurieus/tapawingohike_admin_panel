@@ -121,7 +121,6 @@ export function EditOrCreateUserEventDialog({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="col-span-3"
-                    required
                 />
                 {error && (
                     <p className="text-red-500 col-span-4">{error}</p>
