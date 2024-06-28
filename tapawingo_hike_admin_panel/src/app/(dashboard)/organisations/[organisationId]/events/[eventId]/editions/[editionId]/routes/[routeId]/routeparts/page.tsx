@@ -1,16 +1,16 @@
 import RoutepartClient from './routepartClient';
 import Layout from '@/components/pageLayout';
 import { Route } from '@/types/route';
-import apiClient from '@/lib/apiClient';
+import apiServerClient from '@/lib/apiClientServer';
 import { Routepart } from '@/types/routepart';
 
 async function getRoute(editionId: string, routeId: string): Promise<Route> {
-  const response = await apiClient.get(`/editions/${editionId}/routes/${routeId}`);
+  const response = await apiServerClient.get(`/editions/${editionId}/routes/${routeId}`);
   return response.data;
 }
 
 async function getRouteparts(routeId: string): Promise<Routepart[]> {
-  const response = await apiClient.get(`/routes/${routeId}/routeparts`);
+  const response = await apiServerClient.get(`/routes/${routeId}/routeparts`);
   return response.data;
 }
 

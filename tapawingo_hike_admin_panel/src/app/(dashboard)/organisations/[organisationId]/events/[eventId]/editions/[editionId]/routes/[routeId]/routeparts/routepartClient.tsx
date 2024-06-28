@@ -3,12 +3,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import { EditOrCreateDialog } from './editOrCreateRoutepartDialog';
 import { DataTable } from '@/components/ui/data-table';
-import { Event } from '@/types/event';
 import { API_BASE_URL } from '@/lib/utils';
 import { useRoutepartColumns } from './routepartColumns';
 import { Route } from '@/types/route';
 import { Routepart } from '@/types/routepart';
 import MapComponent from '@/components/ui/map';
+import apiClientClient from "@/lib/apiClientClient";
 
 type RoutepartClientProps = {
   initialData: {
@@ -33,15 +33,9 @@ const RoutepartClient = ({ initialData }: RoutepartClientProps) => {
   }, []);
 
   const refreshData = useCallback(async (id:number | undefined) => {
-    const response = await fetch(`${API_BASE_URL}/routes/${id}/routeparts`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    });
-    const newData = await response.json();
-    setRoutepartData(newData);
+    const response = apiClientClient.get(`${API_BASE_URL}/routes/${id}/routeparts`);
+    const newData = await response;
+    setRoutepartData(newData.data);
   }, []);
 
   const handleCreate = async (id: number | undefined, routepartData: FormData) => {
