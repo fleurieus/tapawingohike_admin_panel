@@ -1,16 +1,13 @@
 "use client";
 
-import { useState, useCallback } from 'react';
-import { EditOrCreateDialog } from './editOrCreateEditionDialog';
-import { DataTable } from '@/components/ui/data-table';
-import { Event } from '@/types/event';
-import { Edition } from '@/types/edition';
-import { API_BASE_URL } from '@/lib/utils';
-import { useEditionColumns } from './editionColumns';
+import {useCallback, useState} from 'react';
+import {EditOrCreateDialog} from './editOrCreateEditionDialog';
+import {DataTable} from '@/components/ui/data-table';
+import {Event} from '@/types/event';
+import {Edition} from '@/types/edition';
+import {API_BASE_URL} from '@/lib/utils';
+import {useEditionColumns} from './editionColumns';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {
-  EditOrCreateUserOrganisationDialog
-} from "@/app/(dashboard)/organisations/[organisationId]/events/editOrCreateUserOrganisationDialog";
 import {
   EditOrCreateUserEventDialog
 } from "@/app/(dashboard)/organisations/[organisationId]/events/[eventId]/editions/editOrCreateUserEventDialog";
@@ -18,7 +15,7 @@ import {
   useUserEventsColumns
 } from "@/app/(dashboard)/organisations/[organisationId]/events/[eventId]/editions/userEventsColumns";
 import {EventUser} from "@/types/eventUser";
-import apiClient from "@/lib/apiClient";
+import apiClientClient from "@/lib/apiClientClient";
 
 type EditionsClientProps = {
   initialData: {
@@ -35,25 +32,19 @@ const EditionsClient = ({ initialData }: EditionsClientProps) => {
 const [userEventData, setUserEventData] = useState<EventUser[]>(initialData.userEventData);
 
   const refreshData = useCallback(async (id:number | undefined) => {
-    const response = await fetch(`${API_BASE_URL}/events/${id}/editions`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    });
-    const newData = await response.json();
-    setEditionData(newData);
+    const response = apiClientClient.get(`/events/${id}/editions`)
+    const newData = await response;
+    setEditionData(newData.data);
   }, []);
 
   const refreshUserEventData = useCallback(async (id:number | undefined) => {
-    const response = await apiClient.get(`/events/${id}/users`);
+    const response = await apiClientClient.get(`/events/${id}/users`);
     setUserEventData(response.data);
   }, []);
 
   const handleCreateUserEvent = async (id: number | undefined, user: EventUser) => {
     try {
-      await apiClient.post(`/events/${id}/users`, user);
+      await apiClientClient.post(`/events/${id}/users`, user);
       await refreshUserEventData(id);
       return Promise.resolve();
     } catch (error: any) {
@@ -62,13 +53,7 @@ const [userEventData, setUserEventData] = useState<EventUser[]>(initialData.user
   }
 
   const handleCreate = async (id: number | undefined, event: Event) => {
-    await fetch(`${API_BASE_URL}/events/${id}/editions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(event),
-    });
+    await apiClientClient.post(`/events/${id}/editions`, event)
     await refreshData(id);
   };
 

@@ -4,6 +4,7 @@ import {EditOrCreateDialog} from './editOrCreateTeamDialog';
 import { Edition } from "@/types/edition";
 import {API_BASE_URL} from '@/lib/utils';
 import { Team } from "@/types/team";
+import apiClientClient from "@/lib/apiClientClient";
 
 export type ColumnsProps = {
   editionData: Edition
@@ -14,24 +15,12 @@ export type ColumnsProps = {
 export const useTeamColumns = ({editionData, onChange}: ColumnsProps) => {
 
   const handleUpdate = async (edition: Edition, team: Team) => {
-
-    await fetch(`${API_BASE_URL}/editions/${edition.id}/teams/${team.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(team),
-    });
+    await apiClientClient.patch(`/editions/${edition.id}/teams/${team.id}`, team);
     onChange(edition.id);
   };
 
   const handleDelete = async (editionId: number | undefined, teamId: number | undefined) => {
-    await fetch(`${API_BASE_URL}/editions/${editionId}/teams/${teamId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    await apiClientClient.delete(`/editions/${editionId}/teams/${teamId}`);
     onChange(editionId);
   };
 

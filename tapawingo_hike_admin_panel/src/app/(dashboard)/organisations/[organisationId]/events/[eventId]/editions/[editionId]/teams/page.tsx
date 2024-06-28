@@ -2,15 +2,15 @@ import TeamsClient from './teamClient';
 import Layout from '@/components/pageLayout';
 import { Edition } from '@/types/edition';
 import { Team } from '@/types/team';
-import apiClient from '@/lib/apiClient';
+import apiServerClient from '@/lib/apiClientServer';
 
 async function getEdition(eventId: string, editionId: string): Promise<Edition> {
-  const response = await apiClient.get(`/events/${eventId}/editions/${editionId}`);
+  const response = await apiServerClient.get(`/events/${eventId}/editions/${editionId}`);
   return response.data;
 }
 
 async function getTeams(editionId: string): Promise<Team[]> {
-  const response = await apiClient.get(`/editions/${editionId}/teams`);
+  const response = await apiServerClient.get(`/editions/${editionId}/teams`);
   return response.data;
 }
 

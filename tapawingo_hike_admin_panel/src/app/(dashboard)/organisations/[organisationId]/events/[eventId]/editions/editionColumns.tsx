@@ -1,10 +1,10 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {FaTrash} from "react-icons/fa6";
 import {EditOrCreateDialog} from './editOrCreateEditionDialog';
-import { Event } from '@/types/event';
-import { Edition } from "@/types/edition";
-import {API_BASE_URL} from '@/lib/utils';
-import { useRouter } from 'next/navigation';
+import {Event} from '@/types/event';
+import {Edition} from "@/types/edition";
+import {useRouter} from 'next/navigation';
+import apiClientClient from "@/lib/apiClientClient";
 
 export type ColumnsProps = {
   organisationId: string
@@ -17,24 +17,12 @@ export const useEditionColumns = ({organisationId, eventData, onChange}: Columns
   const router = useRouter();
 
   const handleUpdate = async (event: Event, edition: Edition) => {
-
-    await fetch(`${API_BASE_URL}/events/${event.id}/editions/${edition.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(edition),
-    });
+    await apiClientClient.patch(`/events/${event.id}/editions/${edition.id}`, edition);
     onChange(event.id);
   };
 
   const handleDelete = async (eventId: number | undefined, editionId: number | undefined) => {
-    await fetch(`${API_BASE_URL}/events/${eventId}/editions/${editionId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    await apiClientClient.delete(`/events/${eventId}/editions/${editionId}`);
     onChange(eventId);
   };
 
