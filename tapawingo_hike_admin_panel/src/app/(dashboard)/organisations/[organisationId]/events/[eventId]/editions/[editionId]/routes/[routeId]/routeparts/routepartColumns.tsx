@@ -4,6 +4,8 @@ import {EditOrCreateDialog} from './editOrCreateRoutepartDialog';
 import { Route } from "@/types/route";
 import {API_BASE_URL} from '@/lib/utils';
 import { Routepart } from "@/types/routepart";
+import apiClient from "@/lib/apiClientClient";
+import Cookies from 'js-cookie';
 
 export type ColumnsProps = {
   routeData: Route
@@ -14,21 +16,19 @@ export type ColumnsProps = {
 export const useRoutepartColumns = ({routeData: routeData, onChange}: ColumnsProps) => {
 
   const handleUpdate = async (route: Route, routepartData: FormData) => {
-
-    await fetch(`${API_BASE_URL}/routes/${route.id}/routeparts/${routeData.id}`, {
+    const token = Cookies.get('jwtToken');
+    await fetch(`${API_BASE_URL}/routes/${route.id}/routeparts/${routeData.id}`, { //TODO: check if this is correct
       method: 'PUT',
+      headers: {
+        'Authorization' : `Bearer ${token}`,
+      },
       body: routepartData,
     });
     onChange(route.id);
   };
 
   const handleDelete = async (routeId: number | undefined, routepartId: number | undefined) => {
-    await fetch(`${API_BASE_URL}/routes/${routeId}/routeparts/${routepartId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    await apiClient.delete(`/routes/${routeId}/routeparts/${routepartId}`)
     onChange(routeId);
   };
 

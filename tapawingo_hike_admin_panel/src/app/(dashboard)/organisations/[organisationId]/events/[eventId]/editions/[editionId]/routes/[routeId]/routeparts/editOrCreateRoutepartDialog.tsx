@@ -27,6 +27,7 @@ import { FaEdit } from "react-icons/fa";
 import "react-day-picker/dist/style.css";
 import React, { useState, useEffect } from "react";
 import { Routepart } from "@/types/routepart";
+import { Destination } from "@/types/destination";
 import { routeTypes } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch"
 import FileManager from "./filemanager"; 
@@ -42,58 +43,59 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
   const [routeType, setRouteType] = useState(value?.routeType || routeTypes.coördinaat);
   const [routepartZoom, setRoutepartZoom] = useState(value?.routepartZoom || false);
   const [routepartFullscreen, setRoutepartFullscreen] = useState(value?.routepartFullscreen || false);
-  const [destinations, setDestinations] = useState([]);
+  const [destinations, setDestinations] = useState<Destination[]>([]);
   const [files, setFiles] = useState<File[]>(value?.files || []);
 
   useEffect(() => {
-    // Fetch files for the current routepart if in edit mode
     if (isEdit) {
-      // Replace with actual API call to fetch files
       setFiles(value?.files || []);
     }
   }, [isEdit]);
 
-  // const fetchFiles = async () => {
-  //   // Dummy data for illustration
-  //   const fetchedFiles = [
-  //     { id: 1, name: "file1.txt" },
-  //     { id: 2, name: "file2.jpg" }
-  //   ];
-  //   setFiles(fetchedFiles);
-  // };
-
   const handleDeleteFile = (fileId: number) => {
-    // Perform file deletion logic here
-    const updatedFiles = files.filter(file => file.id !== fileId);
+    const updatedFiles = files.filter(file => 2 !== fileId);
     setFiles(updatedFiles);
   };
 
   const handleUploadFile = (file: File) => {
-    // Perform file upload logic here
     const updatedFiles = [...files, file];
     setFiles(updatedFiles);
   };
 
+  const handleDestinationChange = (index: number, field: keyof Destination, value: string | boolean) => {
+    const updatedDestinations = [...destinations];
+    updatedDestinations[index] = {
+      ...updatedDestinations[index],
+      [field]: value
+    };
+    setDestinations(updatedDestinations);
+  };
+
+  const handleAddDestination = () => {
+    setDestinations([...destinations, {
+      name: "",
+      latitude: 0,
+      longitude: 0,
+      radius: 0,
+      destinationType: "",
+      confirmByUser: false,
+      hideForUser: false
+    }]);
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
-    // Note: routeparts post and put take in formData
+
     let formData = new FormData();
     formData.append('name', name);
     formData.append('routeType', routeType);
     formData.append('routepartZoom', routepartZoom.toString());
     formData.append('routepartFullscreen', routepartFullscreen.toString());
 
-    // Add these back when their tabs work
-    // formData.append('destinations', destinations);
-    formData.append('files', files.map(f => ({
-      f.file, f.file.name
-    })));
-    formData.append("file",uploadedFile,uploadedFile.name);
+    formData.append('destinations', JSON.stringify(destinations));
 
     onSave(formData, isEdit);
 
-    // Reset to default values
     setName(value?.name || "");
     setRouteType(value?.routeType || routeTypes.coördinaat);
     setRoutepartZoom(value?.routepartZoom || false);
@@ -174,7 +176,98 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
               </div>
             </TabsContent>
             <TabsContent value="destinations">
-              {/* Content for destinations tab */}
+            <div className="grid gap-4 py-4">
+                {destinations.map((destination, index) => (
+                  <div key={index} className="grid gap-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor={`destinationName-${index}`} className="text-right">
+                        Name
+                      </Label>
+                      <Input
+                        id={`destinationName-${index}`}
+                        value={destination.name}
+                        onChange={(e) => handleDestinationChange(index, "name", e.target.value)}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor={`latitude-${index}`} className="text-right">
+                        Latitude
+                      </Label>
+                      <Input
+                        id={`latitude-${index}`}
+                        type="number"
+                        value={destination.latitude.toString()}
+                        onChange={(e) => handleDestinationChange(index, "latitude", parseFloat(e.target.value))}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor={`longitude-${index}`} className="text-right">
+                        Longitude
+                      </Label>
+                      <Input
+                        id={`longitude-${index}`}
+                        type="number"
+                        value={destination.longitude.toString()}
+                        onChange={(e) => handleDestinationChange(index, "longitude", parseFloat(e.target.value))}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor={`radius-${index}`} className="text-right">
+                        Radius
+                      </Label>
+                      <Input
+                        id={`radius-${index}`}
+                        type="number"
+                        value={destination.radius.toString()}
+                        onChange={(e) => handleDestinationChange(index, "radius", parseFloat(e.target.value))}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor={`type-${index}`} className="text-right">
+                        Destination type
+                      </Label>
+                      <Input
+                        id={`type-${index}`}
+                        value={destination.destinationType}
+                        onChange={(e) => handleDestinationChange(index, "destinationType", e.target.value)}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor={`confirmByUser-${index}`} className="text-right">
+                        Confirm by user
+                      </Label>
+                      <Switch
+                        checked={destination.confirmByUser}
+                        onCheckedChange={(value) => handleDestinationChange(index, "confirmByUser", value)}
+                        id={`confirmByUser-${index}`}
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor={`hideForUser-${index}`} className="text-right">
+                        Hide for user
+                      </Label>
+                      <Switch
+                        checked={destination.hideForUser}
+                        onCheckedChange={(value) => handleDestinationChange(index, "hideForUser", value)}
+                        id={`hideForUser-${index}`}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Button type="button" onClick={handleAddDestination} className="mt-4">
+                  Add Destination
+                </Button>
+              </div>
             </TabsContent>
             <TabsContent value="files">
               <FileManager files={files} onDelete={handleDeleteFile} onUpload={handleUploadFile} />

@@ -9,6 +9,7 @@ import { Route } from '@/types/route';
 import { Routepart } from '@/types/routepart';
 import MapComponent from '@/components/ui/map';
 import apiClientClient from "@/lib/apiClientClient";
+import Cookies from 'js-cookie';
 
 type RoutepartClientProps = {
   initialData: {
@@ -39,8 +40,12 @@ const RoutepartClient = ({ initialData }: RoutepartClientProps) => {
   }, []);
 
   const handleCreate = async (id: number | undefined, routepartData: FormData) => {
+    const token = Cookies.get('jwtToken');
     await fetch(`${API_BASE_URL}/routes/${id}/routeparts`, {
       method: 'POST',
+      headers: {
+        'Authorization' : `Bearer ${token}`,
+      },
       body: routepartData,
     });
     await refreshData(id);
