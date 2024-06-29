@@ -4,8 +4,13 @@ import OrganisationsClient from "@/app/(dashboard)/organisations/organisationsCl
 import Layout from '@/components/pageLayout';
 
 async function getOrganisations(): Promise<Organisation[]> {
-  const response = await apiServerClient.get('/organisations');
-  return response.data;
+  try {
+    const response = await apiServerClient.get('/organisations');
+    return response.data;
+  } catch (error) {
+    console.error('Error during axios request:', error.response || error.message || error);
+    throw error;
+  }
 }
 
 export default async function OrganisationsPage() {
