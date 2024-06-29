@@ -16,8 +16,10 @@ export type ColumnsProps = {
 export const useRoutepartColumns = ({routeData: routeData, onChange}: ColumnsProps) => {
 
   const handleUpdate = async (route: Route, routepartData: FormData) => {
+    console.log('files');
+    console.log(routepartData.get('files'));
     const token = Cookies.get('jwtToken');
-    await fetch(`${API_BASE_URL}/routes/${route.id}/routeparts/${routeData.id}`, { //TODO: check if this is correct
+    await fetch(`${API_BASE_URL}/routes/${route.id}/routeparts/${routepartData.get('id')}`, {
       method: 'PUT',
       headers: {
         'Authorization' : `Bearer ${token}`,

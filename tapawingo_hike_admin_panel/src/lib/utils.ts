@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export enum routeTypes {
   coördinaat = "Coördinaat",
-  Afbeelding  = "Afbeelding",
+  Afbeeldingen  = "Afbeelding(en)",
   audio = "Audio",
 }
 
