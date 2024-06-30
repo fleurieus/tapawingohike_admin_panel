@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Getting Started without docker
 
 First, run the development server:
 
@@ -19,6 +19,26 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+## Getting Started with docker
+
+First run the backend docker compose as this projects docker hooks into it.
+
+Run the development server:
+
+```bash
+docker compose up
+```
+
+To test the project for production you can start this project in production mode using docker:
+
+```bash
+docker compose -f docker-compose.prod.yml up
+```
+
+Open [http://tapawingo.localhost/admin](http://tapawingo.localhost/admin) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file. (except when you run the application in prodcution mode)
 
 ## Learn More
 

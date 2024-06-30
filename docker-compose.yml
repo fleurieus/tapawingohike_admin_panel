@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+  proxynetwork:
+    external: true
+
+services:
+  next-app:
+    container_name: next-app
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    restart: always
+    ports:
+      - 3000:3000
+
+    networks:
+      proxynetwork:
+        aliases:
+          - next-app
+
+  nginx:
+    restart: unless-stopped
+    container_name: nginx
+    image: nginx:stable-alpine
+    networks:
+      - proxynetwork
+    depends_on:
+      - next-app

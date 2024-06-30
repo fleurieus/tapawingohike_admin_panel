@@ -11,4 +11,4 @@ export enum routeTypes {
   audio = "Audio",
 }
 
-export const API_BASE_URL = 'http://localhost:5175';
+export const API_BASE_URL = 'http://localhost:7061';
