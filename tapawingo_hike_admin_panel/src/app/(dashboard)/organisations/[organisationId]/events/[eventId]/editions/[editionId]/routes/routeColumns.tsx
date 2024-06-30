@@ -1,11 +1,12 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {FaTrash} from "react-icons/fa6";
 import {EditOrCreateDialog} from './editOrCreateRouteDialog';
-import { Edition } from "@/types/edition";
-import { Route } from "@/types/route";
-import {API_BASE_URL} from '@/lib/utils';
+import {Edition} from "@/types/edition";
+import {Route} from "@/types/route";
 import apiClientClient from "@/lib/apiClientClient";
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
+import {FaCircle} from "react-icons/fa";
+import Button from "@/components/ui/button";
 
 export type ColumnsProps = {
   organisationId: string
@@ -28,6 +29,11 @@ export const useRouteColumns = ({organisationId, eventId, editionData, onChange}
     onChange(editionId);
   };
 
+  const setRouteActive = async (route: Route) => {
+    await apiClientClient.patch(`/editions/${editionData.id}/routes/${route.id}/active`, {});
+    onChange(editionData.id);
+  };
+
   const handleCellClick = (organisationId: string, eventId: string, editionId: number | undefined, routeId: number | undefined) => {
     router.push(`/organisations/${organisationId}/events/${eventId}/editions/${editionId}/routes/${routeId}/routeparts`);
   };
@@ -36,14 +42,45 @@ export const useRouteColumns = ({organisationId, eventId, editionData, onChange}
     {
       accessorKey: "name",
       header: "Name",
-      cell: ({ row }) => (
-        <div
-          className="cursor-pointer"
-          onClick={() => handleCellClick(organisationId, eventId, editionData.id, row.original.id)}
-        >
-          {row.getValue('name')}
-        </div>
+      cell: ({row}) => (
+          <div
+              className="cursor-pointer"
+              onClick={() => handleCellClick(organisationId, eventId, editionData.id, row.original.id)}
+          >
+            {row.getValue('name')}
+          </div>
       ),
+    },
+    {
+      accessorKey: "active",
+      header: "Active",
+      cell: ({row}) => {
+        const route = row.original;
+        return (
+            <div className="flex items-center space-x-2">
+            <span>
+              {route.active ? <FaCircle className="text-green-500" title="Active"/> :
+                  <FaCircle className="text-red-500" title="Inactive"/>}
+            </span>
+            </div>
+        );
+      }
+    },
+    {
+      id: "setActive",
+      header: "Set Active",
+      cell: ({row}) => {
+        const route = row.original;
+        return (
+            <Button
+                onClick={() => setRouteActive(route)}
+                disabled={route.active}
+                title="Set this route as active"
+            >
+              {route.active ? "Active" : "Set Active"}
+            </Button>
+        );
+      },
     },
     {
       id: "actions",
