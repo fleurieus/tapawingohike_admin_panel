@@ -18,7 +18,6 @@ export const useOrganisationColumns = ({onChange}: ColumnsProps) => {
 
   const handleUpdate = async (organisation: Organisation) => {
     try {
-      console.log(organisation)
       await apiClientClient.patch(`/organisations/${organisation.id}`, organisation);
       onChange();
     } catch (error) {

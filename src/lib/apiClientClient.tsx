@@ -15,11 +15,8 @@ apiClient.interceptors.request.use(
        const token = Cookies.get('jwtToken');
 
       if (token) {
-        console.log("Setting Authorization header with token:", token);
         config.headers['Authorization'] = `Bearer ${token}`;
-      } else {
-        console.log("No token found in cookies for Authorization header.");
-      }
+      } 
 
       return config;
     },
@@ -34,12 +31,9 @@ apiClient.interceptors.response.use(
         originalRequest._retry = true;
 
         try {
-          console.log("Attempting to refresh.ts token.");
           const refreshToken = Cookies.get('refreshToken');
-          console.log(refreshToken)
 
           if (!refreshToken) {
-            console.log("No refresh token found.");
             return Promise.reject(error);
           }
 
