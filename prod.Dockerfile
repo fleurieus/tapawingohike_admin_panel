@@ -71,7 +71,5 @@ ENV NEXT_PUBLIC_ENV_VARIABLE=${NEXT_PUBLIC_ENV_VARIABLE}
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 # Note: Don't expose ports here, Compose will handle that for us
-# Dev note: no docker compose was made for this so ports will be exposed here, feel free to undo this if a docker compose is made later down the line
-EXPOSE 3000
 
 CMD ["node", "server.js"]
