@@ -1,8 +1,7 @@
-"use client"
-import React, {useState, useEffect} from "react";
+"use client";
+import React, {useEffect, useState} from "react";
 import Link from "next/link";
-import {Home, ChevronDown, ChevronUp, ChevronRight} from "lucide-react";
-import {useUser} from "@/context/userContext";
+import {ChevronDown, ChevronRight, ChevronUp, Home} from "lucide-react";
 import {Organisation} from "@/types/organisation";
 import {Event} from "@/types/event";
 import {Edition} from "@/types/edition";
@@ -11,7 +10,6 @@ import apiClientClient from "@/lib/apiClientClient";
 const Sidebar: React.FC = () => {
   const [organisations, setOrganisations] = useState<Organisation[]>([]);
   const [isOpen, setIsOpen] = useState<{ [key: string]: boolean }>({});
-  const {role} = useUser();
 
   useEffect(() => {
     fetchOrganisations();
@@ -34,7 +32,7 @@ const Sidebar: React.FC = () => {
 
   const toggleOpen = async (id: number, level: string) => {
     try {
-      const updatedIsOpen = {...isOpen};
+      const updatedIsOpen = { ...isOpen };
       const key = generateToggleKey(id, level);
       updatedIsOpen[key] = !updatedIsOpen[key];
       setIsOpen(updatedIsOpen);
@@ -82,7 +80,7 @@ const Sidebar: React.FC = () => {
       const response = await apiClientClient.get(`/organisations/${orgId}/events`);
       const data = response.data;
       const updatedOrganisations = organisations.map((org) =>
-          org.id === orgId ? {...org, events: data} : org
+          org.id === orgId ? { ...org, events: data } : org
       );
       setOrganisations(updatedOrganisations);
     } catch (error) {
@@ -97,7 +95,7 @@ const Sidebar: React.FC = () => {
       const updatedOrganisations = organisations.map((org) => ({
         ...org,
         events: org.events?.map((event) =>
-            event.id === eventId ? {...event, editions: data} : event
+            event.id === eventId ? { ...event, editions: data } : event
         ),
       }));
       setOrganisations(updatedOrganisations);
@@ -115,7 +113,7 @@ const Sidebar: React.FC = () => {
         events: org.events?.map((event) => ({
           ...event,
           editions: event.editions?.map((edition) =>
-              edition.id === editionId ? {...edition, routes: data} : edition
+              edition.id === editionId ? { ...edition, routes: data } : edition
           ),
         })),
       }));
@@ -136,7 +134,7 @@ const Sidebar: React.FC = () => {
           editions: event.editions?.map((edition) => ({
             ...edition,
             routes: edition.routes?.map((route) =>
-                route.id === routeId ? {...route, routeparts: data} : route
+                route.id === routeId ? { ...route, routeparts: data } : route
             ),
           })),
         })),
@@ -145,11 +143,11 @@ const Sidebar: React.FC = () => {
     } catch (error) {
       console.error(`Error fetching routeparts for route ${routeId}:`, error);
     }
-  }
+  };
 
   return (
-      <aside className="hidden md:block bg-tapawingo_green text-white border-r">
-        <div className="flex flex-col gap-2 h-full max-h-screen">
+      <aside className="h-full min-h-0 bg-tapawingo_green text-white border-r overflow-y-auto">
+        <div className="flex flex-col gap-2 h-full">
           <div className="flex items-center h-14 border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold text-white">
               <span>Tapawingo Hike</span>
@@ -163,12 +161,12 @@ const Sidebar: React.FC = () => {
                         onClick={() => toggleOpen(org.id!, "organisation")}
                         className="flex items-center gap-2 w-full text-left"
                     >
-                      <Home className="h-4 w-4"/>
+                      <Home className="h-4 w-4" />
                       <span>{org.name}</span>
                       {isOpen[`org-${org.id}`] ? (
-                          <ChevronUp className="ml-auto h-4 w-4"/>
+                          <ChevronUp className="ml-auto h-4 w-4" />
                       ) : (
-                          <ChevronDown className="ml-auto h-4 w-4"/>
+                          <ChevronDown className="ml-auto h-4 w-4" />
                       )}
                     </button>
                     {isOpen[`org-${org.id}`] && (
@@ -180,9 +178,8 @@ const Sidebar: React.FC = () => {
                                         onClick={() => toggleOpen(event.id!, "event")}
                                         className="flex items-center gap-2 w-full text-left"
                                     >
-                                      <ChevronRight className="h-4 w-4"/>
-                                      <Link
-                                          href={`/organisations/${org.id}/events/${event.id}/editions`}>
+                                      <ChevronRight className="h-4 w-4" />
+                                      <Link href={`/organisations/${org.id}/events/${event.id}/editions`}>
                                         <span>{event.name}</span>
                                       </Link>
                                     </button>
@@ -195,7 +192,7 @@ const Sidebar: React.FC = () => {
                                                         onClick={() => toggleOpen(edition.id!, "edition")}
                                                         className="flex items-center gap-2 w-full text-left"
                                                     >
-                                                      <ChevronRight className="h-4 w-4"/>
+                                                      <ChevronRight className="h-4 w-4" />
                                                       <Link
                                                           href={`/organisations/${org.id}/events/${event.id}/editions/${edition.id}/routes`}
                                                       >
@@ -211,8 +208,7 @@ const Sidebar: React.FC = () => {
                                                                         onClick={() => toggleOpen(route.id!, "route")}
                                                                         className="flex items-center gap-2 w-full text-left"
                                                                     >
-                                                                      <ChevronRight
-                                                                          className="h-4 w-4"/>
+                                                                      <ChevronRight className="h-4 w-4" />
                                                                       <Link
                                                                           href={`/organisations/${org.id}/events/${event.id}/editions/${edition.id}/routes/${route.id}/routeparts`}
                                                                       >
@@ -223,8 +219,7 @@ const Sidebar: React.FC = () => {
                                                                         <div className="pl-4">
                                                                           {route.routeparts!.length > 0 ? (
                                                                               route.routeparts?.map((routepart) => (
-                                                                                  <div
-                                                                                      key={routepart.id}>
+                                                                                  <div key={routepart.id}>
                                                                                     <Link
                                                                                         href={`/organisations/${org.id}/events/${event.id}/editions/${edition.id}/routes/${route.id}/routeparts`}
                                                                                     >
@@ -233,18 +228,14 @@ const Sidebar: React.FC = () => {
                                                                                   </div>
                                                                               ))
                                                                           ) : (
-                                                                              <div
-                                                                                  className="pl-4">No
-                                                                                routeparts
-                                                                                available</div>
+                                                                              <div className="pl-4">No routeparts available</div>
                                                                           )}
                                                                         </div>
                                                                     )}
                                                                   </div>
                                                               ))
                                                           ) : (
-                                                              <div className="pl-4">No routes
-                                                                available</div>
+                                                              <div className="pl-4">No routes available</div>
                                                           )}
                                                         </div>
                                                     )}

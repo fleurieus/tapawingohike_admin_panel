@@ -1,9 +1,9 @@
-import {UserProvider} from "@/context/userContext";
+import { UserProvider } from "@/context/userContext";
 import Header from "@/components/ui/header";
 import Sidebar from "@/components/ui/sidebar";
 
 export default function DashboardLayout({
-                                          children
+                                          children,
                                         }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -12,10 +12,10 @@ export default function DashboardLayout({
         <div className="flex flex-col h-screen">
           <Header />
           <div className="flex flex-row flex-grow overflow-hidden">
-            <Sidebar/>
-            <div className="flex-grow overflow-auto">
+            <Sidebar />
+            <main className="flex-grow overflow-auto p-4 bg-gray-100">
               {children}
-            </div>
+            </main>
           </div>
         </div>
       </UserProvider>

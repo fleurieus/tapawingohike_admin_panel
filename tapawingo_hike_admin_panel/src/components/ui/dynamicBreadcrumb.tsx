@@ -1,22 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { Organisation } from '@/types/organisation';
-import { Event } from '@/types/event';
+import React, {useEffect, useState} from 'react';
+import {usePathname} from 'next/navigation';
+import {Organisation} from '@/types/organisation';
+import {Event} from '@/types/event';
 import "./../pageLayout.css";
 import {
-  Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Edition } from '@/types/edition';
-import { Route } from '@/types/route';
-import { Team } from '@/types/team';
-import apiClient from '@/lib/apiClientServer';
+import {Edition} from '@/types/edition';
+import {Route} from '@/types/route';
+import {Team} from '@/types/team';
 import ApiClientClient from "@/lib/apiClientClient";
 
 const DynamicBreadcrumb = () => {
@@ -96,7 +94,7 @@ const DynamicBreadcrumb = () => {
   return (
     <BreadcrumbList className="breadcrumb">
       <BreadcrumbItem>
-        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+        <BreadcrumbLink href="/" className="text-white">Home</BreadcrumbLink>
       </BreadcrumbItem>
       {path.length > 0 && <BreadcrumbSeparator>/</BreadcrumbSeparator>}
       {breadcrumbItems}
