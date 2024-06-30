@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   Dialog,
   DialogContent,
@@ -25,14 +26,10 @@ import { Destination } from "@/types/destination";
 import { routeTypes } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
 import { RoutepartFile } from "@/types/routepartFile";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet/dist/images/marker-shadow.png";
+import L from "leaflet";
 
 type EditOrCreateDialogProps = {
   value?: Routepart;
@@ -40,7 +37,6 @@ type EditOrCreateDialogProps = {
 };
 
 export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
-  //console.log(value);
   const isEdit = !!value;
   const [routepartId, setRoutepartId] = useState(value?.id || undefined);
   const [name, setName] = useState(value?.name || "");
@@ -60,28 +56,29 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
   const [savedFiles, setSavedFiles] = useState<RoutepartFile[]>([]);
 
   const iconSettings = {
-		mapIconUrl: '<svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 149 178"><path fill="{mapIconColor}" stroke="#FFF" stroke-width="6" stroke-miterlimit="10" d="M126 23l-6-6A69 69 0 0 0 74 1a69 69 0 0 0-51 22A70 70 0 0 0 1 74c0 21 7 38 22 52l43 47c6 6 11 6 16 0l48-51c12-13 18-29 18-48 0-20-8-37-22-51z"/><circle fill="{mapIconColorInnerCircle}" cx="74" cy="75" r="61"/><circle fill="#FFF" cx="74" cy="75" r="{pinInnerCircleRadius}"/></svg>',
-		mapIconColor: '#cc756b',
-		mapIconColorInnerCircle: '#fff',
-		pinInnerCircleRadius:48
-	};
+    mapIconUrl:
+      '<svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 149 178"><path fill="{mapIconColor}" stroke="#FFF" stroke-width="6" stroke-miterlimit="10" d="M126 23l-6-6A69 69 0 0 0 74 1a69 69 0 0 0-51 22A70 70 0 0 0 1 74c0 21 7 38 22 52l43 47c6 6 11 6 16 0l48-51c12-13 18-29 18-48 0-20-8-37-22-51z"/><circle fill="{mapIconColorInnerCircle}" cx="74" cy="75" r="61"/><circle fill="#FFF" cx="74" cy="75" r="{pinInnerCircleRadius}"/></svg>',
+    mapIconColor: "#cc756b",
+    mapIconColorInnerCircle: "#fff",
+    pinInnerCircleRadius: 48,
+  };
 
   // icon normal state
   const divIcon = L.divIcon({
     className: "leaflet-data-marker",
     html: L.Util.template(iconSettings.mapIconUrl, iconSettings), //.replace('#','%23'),
-    iconAnchor  : [12, 32],
-    iconSize    : [25, 30],
-    popupAnchor : [0, -28]
+    iconAnchor: [12, 32],
+    iconSize: [25, 30],
+    popupAnchor: [0, -28],
   });
 
   useEffect(() => {
     if (value?.files) {
-      // Initialize savedFiles with data from value?.files
-      console.log(value.files);
+      // @ts-ignore
       setSavedFiles(value.files);
     }
     if (value?.destinations) {
+      // @ts-ignore
       setDestinations(value.destinations);
     }
   }, [value]);
@@ -191,10 +188,6 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
     files.forEach((file) => {
       formData.append("files", file);
     });
-
-    console.log("files");
-    console.log(files);
-    console.log("files");
 
     onSave(formData, isEdit);
     setOpen(false);
@@ -325,8 +318,10 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                      <Marker position={[destination.latitude, destination.longitude]} icon={divIcon}>
-                      </Marker>
+                    <Marker
+                      position={[destination.latitude, destination.longitude]}
+                      icon={divIcon}
+                    ></Marker>
                     <MapClickHandler />
                   </MapContainer>
                 </div>
@@ -342,6 +337,7 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
                       handleDestinationChange(
                         index,
                         "radius",
+                        // @ts-ignore
                         parseFloat(e.target.value)
                       )
                     }
