@@ -43,6 +43,8 @@ const RoutesClient = ({ initialData }: RoutesClientProps) => {
   };
 
   const { columns } = useRouteColumns({
+    organisationId: initialData.organisationId,
+    eventId: initialData.eventId,
     routeData: routeData,
     editionData: editionData,
     onChange: refreshData,

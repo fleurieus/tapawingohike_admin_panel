@@ -17,11 +17,13 @@ import React, { useState, useEffect } from "react";
 
 type EditOrCreateDialogProps = {
   value?: Event;
-  onSave: (data: Event, isEdit: boolean) => void;
+  onSave: (data: Event, isEdit: boolean) => Promise<void>;
 };
 
 export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
   const isEdit = !!value;
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
   const [name, setName] = useState(value?.name || "");
 
   useEffect(() => {
@@ -34,12 +36,18 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
       id: value?.id,
       name,
     };
-    setName("");
-    onSave(updatedValue, isEdit);
+
+    onSave(updatedValue, isEdit).then(() => {
+      setError("");
+      setOpen(false);
+      setName("");
+      }).catch((error: any) => {
+        setError(error);
+    });
   };
 
   return (
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {isEdit ? (
               <button> <FaEdit /></button>
@@ -69,6 +77,9 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
                     className="col-span-3"
                     required
                 />
+                {error && (
+                    <p className="text-red-500 col-span-4">{error}</p>
+                )}
               </div>
             </div>
             <DialogFooter>
