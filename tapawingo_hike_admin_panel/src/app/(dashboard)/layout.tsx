@@ -1,7 +1,6 @@
-import React from "react";
-import Sidebar from "@/components/ui/sidebar";
-import Header from "@/components/ui/header";
 import {UserProvider} from "@/context/userContext";
+import Header from "@/components/ui/header";
+import Sidebar from "@/components/ui/sidebar";
 
 export default function DashboardLayout({
                                           children
@@ -10,10 +9,14 @@ export default function DashboardLayout({
 }>) {
   return (
       <UserProvider>
-        <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-          <Sidebar/>
-          <Header/>
-          {children}
+        <div className="flex flex-col h-screen">
+          <Header />
+          <div className="flex flex-row flex-grow overflow-hidden">
+            <Sidebar/>
+            <div className="flex-grow overflow-auto">
+              {children}
+            </div>
+          </div>
         </div>
       </UserProvider>
   );
