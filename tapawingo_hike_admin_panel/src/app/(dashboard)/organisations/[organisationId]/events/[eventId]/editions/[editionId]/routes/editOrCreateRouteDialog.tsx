@@ -22,6 +22,7 @@ type EditOrCreateDialogProps = {
 
 export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
   const isEdit = !!value;
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState(value?.name || "");
 
   useEffect(() => {
@@ -33,13 +34,16 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
     const updatedValue: Route = {
       id: value?.id,
       name,
+      routeparts: []
     };
-    setName("");
+
     onSave(updatedValue, isEdit);
+    setOpen(false);
+    setName("");
   };
 
   return (
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {isEdit ? (
               <button><FaEdit /></button>

@@ -51,8 +51,13 @@ const EventsClient = ({initialData}: EventsClientProps) => {
     }
   };
   const handleCreate = async (id: number | undefined, event: Event) => {
-    await apiClientClient.post(`/organisations/${id}/events`, event);
-    await refreshData(id);
+    try {
+      await apiClientClient.post(`/organisations/${id}/events`, event);
+      await refreshData(id);
+      return Promise.resolve();
+    } catch (error: any) {
+      return Promise.reject(error.response.data.message);
+    }
   };
 
   const {columns} = useEventColumns({

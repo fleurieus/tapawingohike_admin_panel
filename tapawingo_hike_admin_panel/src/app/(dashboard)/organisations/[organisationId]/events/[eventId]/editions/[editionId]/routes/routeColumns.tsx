@@ -50,7 +50,7 @@ export const useRouteColumns = ({organisationId, eventId, editionData, onChange}
       cell: ({row}) => {
         const route = row.original;
         return (
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 justify-end">
               <EditOrCreateDialog
                   value={route}
                   onSave={(route) => handleUpdate(editionData, route)}

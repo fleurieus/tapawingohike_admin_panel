@@ -21,6 +21,7 @@ type EditOrCreateDialogProps = {
 
 export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
   const isEdit = !!value;
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState(value?.name || "");
   const [contactPerson, setContactPerson] = useState(value?.contactPerson || "");
   const [contactEmail, setContactEmail] = useState(value?.contactEmail || "");
@@ -40,10 +41,14 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
       contactEmail: contactEmail,
     };
     onSave(updatedValue, isEdit);
+    setOpen(false);
+    setName("");
+    setContactPerson("");
+    setContactEmail("");
   };
 
   return (
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {isEdit ? (
               <button><FaEdit /></button>
