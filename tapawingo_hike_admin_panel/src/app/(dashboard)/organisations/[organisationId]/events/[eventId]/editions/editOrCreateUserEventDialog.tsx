@@ -12,23 +12,22 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {FaEdit} from "react-icons/fa";
 import React, {useEffect, useState} from "react";
-import {OrganisationUser} from "@/types/organisationUser";
+import {EventUser} from "@/types/eventUser";
 
-type EditOrCreateUserOrganisationDialogProps = {
-  value?: OrganisationUser;
-  onSave: (data: OrganisationUser, isEdit: boolean) => Promise<void>;
+type EditOrCreateUserEventDialogProps = {
+  value?: EventUser;
+  onSave: (data: EventUser, isEdit: boolean) => Promise<void>;
 };
 
-export function EditOrCreateUserOrganisationDialog({
+export function EditOrCreateUserEventDialog({
                                                      value,
                                                      onSave,
-                                                   }: EditOrCreateUserOrganisationDialogProps) {
+                                                   }: EditOrCreateUserEventDialogProps) {
   const isEdit = !!value;
   const [firstName, setFirstName] = useState(value?.firstName || "");
   const [lastName, setLastName] = useState(value?.lastName || "");
   const [email, setEmail] = useState(value?.email || "");
   const [password, setPassword] = useState(value?.password || "");
-  const [isManager, setIsManager] = useState(value?.isManager || false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
 
@@ -36,25 +35,23 @@ export function EditOrCreateUserOrganisationDialog({
     setFirstName(value?.firstName || "");
     setLastName(value?.lastName || "");
     setEmail(value?.email || "");
-    setIsManager(value?.isManager || false);
     setPassword(value?.password || "");
   }, [value]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const updatedValue: OrganisationUser = {
+    const updatedValue: EventUser = {
       id: value?.id,
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password,
-      isManager: isManager,
     };
-      onSave(updatedValue, isEdit).then(() => {
-        setError("");
-        setOpen(false);
-      }).catch((error: any) => {
-        setError(error);
+    onSave(updatedValue, isEdit).then(() => {
+      setError("");
+      setOpen(false);
+    }).catch((error: any) => {
+      setError(error);
     });
   };
 
@@ -123,18 +120,6 @@ export function EditOrCreateUserOrganisationDialog({
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="isManager" className="text-right">
-                  Manager
-                </Label>
-                <Input
-                    id="isManager"
-                    type="checkbox"
-                    checked={isManager}
-                    onChange={(e) => setIsManager(e.target.checked)}
                     className="col-span-3"
                 />
                 {error && (

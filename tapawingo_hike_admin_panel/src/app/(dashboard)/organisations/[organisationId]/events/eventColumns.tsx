@@ -3,8 +3,8 @@ import {FaTrash} from "react-icons/fa6";
 import {EditOrCreateDialog} from './editOrCreateEventDialog';
 import { Organisation } from '@/types/organisation';
 import { Event } from '@/types/event';
-import {API_BASE_URL} from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import apiClientClient from "@/lib/apiClientClient";
 
 export type ColumnsProps = {
   organisationData: Organisation
@@ -16,24 +16,12 @@ export const useEventColumns = ({organisationData, onChange}: ColumnsProps) => {
   const router = useRouter();
 
   const handleUpdate = async (organisation: Organisation, event: Event) => {
-
-    await fetch(`${API_BASE_URL}/organisations/${organisation.id}/events/${event.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(event),
-    });
+    await apiClientClient.put(`/organisations/${organisation.id}/events/${event.id}`, event);
     onChange(organisation.id);
   };
 
   const handleDelete = async (orgId: number | undefined, eventId: number | undefined) => {
-    await fetch(`${API_BASE_URL}/organisations/${orgId}/events/${eventId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    await apiClientClient.delete(`/organisations/${orgId}/events/${eventId}`);
     onChange(orgId);
   };
 
@@ -48,6 +36,7 @@ export const useEventColumns = ({organisationData, onChange}: ColumnsProps) => {
       cell: ({ row }) => (
         <div
           className="cursor-pointer"
+          // @ts-ignore
           onClick={() => handleCellClick(organisationData.id, row.original.id)}
         >
           {row.getValue('name')}
@@ -59,7 +48,7 @@ export const useEventColumns = ({organisationData, onChange}: ColumnsProps) => {
       cell: ({row}) => {
         const event = row.original;
         return (
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 justify-end">
               <EditOrCreateDialog
                   value={event}
                   onSave={(event) => handleUpdate(organisationData, event)}

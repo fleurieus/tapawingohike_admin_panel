@@ -1,17 +1,17 @@
-import {Organisation} from "@/types/organisation";
-import apiClient from "@/lib/apiClient";
+import { Organisation } from "@/types/organisation";
+import apiServerClient from "@/lib/apiClientServer";
 import OrganisationsClient from "@/app/(dashboard)/organisations/organisationsClient";
-import React from "react";
+import Layout from '@/components/pageLayout';
 
 async function getOrganisations(): Promise<Organisation[]> {
-  const response = await apiClient.get('/organisations');
+  const response = await apiServerClient.get('/organisations');
   return response.data;
 }
 
 export default async function OrganisationsPage() {
   const data = await getOrganisations();
 
-  return (
-        <OrganisationsClient initialData={data}/>
-  );
+  return (<Layout>
+    <OrganisationsClient initialData={data} />
+  </Layout>);
 }

@@ -3,8 +3,10 @@ import {FaTrash} from "react-icons/fa6";
 import {EditOrCreateDialog} from './editOrCreateDialog';
 import {Organisation} from '@/types/organisation';
 import { useRouter } from 'next/navigation';
-import apiClient from "@/lib/apiClient";
+import apiClient from "@/lib/apiClientServer";
 import { API_BASE_URL } from "@/lib/utils";
+import apiServerClient from "@/lib/apiClientServer";
+import apiClientClient from "@/lib/apiClientClient";
 
 export type ColumnsProps = {
   data: Organisation[];
@@ -16,13 +18,8 @@ export const useOrganisationColumns = ({onChange}: ColumnsProps) => {
 
   const handleUpdate = async (organisation: Organisation) => {
     try {
-      await fetch(`${API_BASE_URL}/organisations/${organisation.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(organisation),
-      });
+      console.log(organisation)
+      await apiClientClient.patch(`/organisations/${organisation.id}`, organisation);
       onChange();
     } catch (error) {
       console.error('Error updating organisation:', error);
@@ -31,12 +28,7 @@ export const useOrganisationColumns = ({onChange}: ColumnsProps) => {
 
   const handleDelete = async (id: number) => {
     try {
-      await fetch(`${API_BASE_URL}/organisations/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      await apiClientClient.delete(`/organisations/${id}`);
       onChange();
     } catch (error) {
       console.error('Error deleting organisation:', error);

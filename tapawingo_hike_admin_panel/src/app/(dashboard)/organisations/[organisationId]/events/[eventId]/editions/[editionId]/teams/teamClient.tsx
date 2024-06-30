@@ -15,6 +15,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import apiClientClient from "@/lib/apiClientClient";
 
 type TeamsClientProps = {
   initialData: {
@@ -31,25 +32,13 @@ const TeamsClient = ({ initialData }: TeamsClientProps) => {
   const router = useRouter();
 
   const refreshData = useCallback(async (id:number | undefined) => {
-    const response = await fetch(`${API_BASE_URL}/editions/${id}/teams`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    });
-    const newData = await response.json();
-    setTeamData(newData);
+    const response = apiClientClient.get(`/editions/${id}/teams`);
+    const newData = await response;
+    setTeamData(newData.data);
   }, []);
 
   const handleCreate = async (id: number | undefined, event: Event) => {
-    await fetch(`${API_BASE_URL}/editions/${id}/teams`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(event),
-    });
+    await apiClientClient.post(`/editions/${id}/teams`, event)
     await refreshData(id);
   };
 

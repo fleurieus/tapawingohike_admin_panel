@@ -13,19 +13,19 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  //Get the roles and restrict certain paths.
-  const roles = Object.keys(decodedToken).filter(key => key.endsWith('Role')).map(key => decodedToken[key]);
+  const roles: string[] = decodedToken.Claim ? decodedToken.Claim.split(',') : [];
+  const normalizedRoles = roles.map(role => role.includes(':') ? role.split(':')[1] : role);
   const restrictedPaths = {
     '/organisations': ['SuperAdmin',],
     '/events': ['SuperAdmin', 'OrganisationManager', 'OrganisationUser'],
-    '/editions': ['SuperAdmin', 'OrganisationManager', 'OrganisationUser', 'EventManager', 'EventUser'],
+    '/editions': ['SuperAdmin', 'OrganisationManager', 'OrganisationUser', 'EventUser'],
   };
 
-  // for (const [path, allowedRoles] of Object.entries(restrictedPaths)) {
-  //   if (request.nextUrl.pathname.startsWith(path) && !roles.some(role => allowedRoles.includes(role))) {
-  //     return NextResponse.redirect(new URL('/forbidden', request.url));
-  //   }
-  // }
+  for (const [path, allowedRoles] of Object.entries(restrictedPaths)) {
+    if (request.nextUrl.pathname.startsWith(path) && !normalizedRoles.some(role => allowedRoles.includes(role))) {
+      return NextResponse.redirect(new URL('/forbidden', request.url));
+    }
+  }
   return NextResponse.next();
 }
 

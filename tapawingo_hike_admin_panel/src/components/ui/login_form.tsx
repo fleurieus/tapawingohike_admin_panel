@@ -1,23 +1,12 @@
 "use client";
 
 import Button from "./button";
-import {Input} from "@/components/ui/input";
-import {Label} from "./label";
-import React, {useState} from "react";
-import Cookies from "js-cookie";
-import {API_BASE_URL} from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Label } from "./label";
+import React, { useState } from "react";
+import { setCookie } from 'nookies';
+import { API_BASE_URL } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import {useUser} from "@/context/userContext";
-import {jwtDecode} from "jwt-decode";
-
-interface JwtPayload {
-  [key: string]: any;
-}
-
-const extractRole = (payload: JwtPayload): string | null => {
-  const roleEntry = Object.entries(payload).find(([key]) => key.endsWith('Role'));
-  return roleEntry ? roleEntry[1] : null;
-};
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +14,7 @@ const LoginForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { setRole } = useUser();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -48,22 +37,11 @@ const LoginForm = () => {
       const data = await response.json();
       const { jwtToken, refreshToken, expiration } = data;
 
-      Cookies.set('jwtToken', jwtToken, {
-        expires: new Date(expiration),
-        secure: true,
-        sameSite: 'Strict',
-      });
-      Cookies.set('refreshToken', refreshToken, {
-        expires: new Date(expiration),
-        secure: true,
-        sameSite: 'Strict',
-      });
-      Cookies.set('tokenExpiration', expiration);
-
-      const decodedToken = jwtDecode<JwtPayload>(jwtToken);
-      const extractedRole = extractRole(decodedToken);
-      setRole(extractedRole);
-      router.push('/organisations')
+      const expirationDate = new Date(expiration);
+      setCookie(null, 'jwtToken', jwtToken, { expires: expirationDate, secure: true, sameSite: 'Strict' });
+      setCookie(null, 'refreshToken', refreshToken, { expires: expirationDate, secure: true, sameSite: 'Strict' });
+      setCookie(null, 'tokenExpiration', expiration, { expires: expirationDate, secure: true, sameSite: 'Strict' });
+      router.push('/organisations');
     } catch (error) {
       console.error('Login error:', error);
       setError('Logging in failed, try again');
