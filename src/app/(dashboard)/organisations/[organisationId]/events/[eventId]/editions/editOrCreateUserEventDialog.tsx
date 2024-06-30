@@ -61,7 +61,7 @@ export function EditOrCreateUserEventDialog({
           {isEdit ? (
               <button><FaEdit/></button>
           ) : (
-              <Button type="button">Create user for organisation</Button>
+              <Button type="button">Create user for event</Button>
           )}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">

@@ -23,6 +23,7 @@ type EditOrCreateDialogProps = {
 
 export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
   const isEdit = !!value;
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState(value?.name || "");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
@@ -48,12 +49,14 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
       // @ts-ignore
       endDate,
     };
-    setName("");
+
     onSave(updatedValue, isEdit);
+    setOpen(false);
+    setName("");
   };
 
   return (
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {isEdit ? (
               <button><FaEdit /></button>

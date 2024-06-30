@@ -22,13 +22,16 @@ type EditOrCreateDialogProps = {
 
 export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
   const isEdit = !!value;
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState(value?.name || "");
+  const [code, setCode] = useState(value?.code || "");
   const [contactName, setContactName] = useState(value?.contactName || "");
   const [contactEmail, setContactEmail] = useState(value?.contactEmail || "");
-  const [contactPhone, setContactPhone] = useState(value?.contactEmail || "");
+  const [contactPhone, setContactPhone] = useState(value?.contactPhone || "");
 
   useEffect(() => {
     setName(value?.name || "");
+    setCode(value?.code || "");
     setContactName(value?.contactName || "");
     setContactEmail(value?.contactEmail || "");
     setContactPhone(value?.contactPhone || "");
@@ -38,19 +41,25 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
     event.preventDefault();
     const updatedValue: Team = {
       id: value?.id,
-      code: value?.code || "",
+      code,
       name,
       contactName,
       contactEmail,
       contactPhone,
       online: value?.online || false,
     };
-    setName("");
+
     onSave(updatedValue, isEdit);
+    setOpen(false);
+    setName("");
+    setCode("");
+    setContactName("");
+    setContactEmail("");
+    setContactPhone("");
   };
 
   return (
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {isEdit ? (
               <button><FaEdit /></button>
@@ -77,6 +86,18 @@ export function EditOrCreateDialog({ value, onSave }: EditOrCreateDialogProps) {
                     id="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    className="col-span-3"
+                    required
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="code" className="text-right">
+                  Code
+                </Label>
+                <Input
+                    id="code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
                     className="col-span-3"
                     required
                 />

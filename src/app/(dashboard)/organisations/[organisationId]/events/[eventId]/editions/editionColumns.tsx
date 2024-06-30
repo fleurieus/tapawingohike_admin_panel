@@ -5,6 +5,8 @@ import {Event} from '@/types/event';
 import {Edition} from "@/types/edition";
 import {useRouter} from 'next/navigation';
 import apiClientClient from "@/lib/apiClientClient";
+import { format } from 'date-fns';
+
 
 export type ColumnsProps = {
   organisationId: string
@@ -51,7 +53,7 @@ export const useEditionColumns = ({organisationId, eventData, onChange}: Columns
           className="cursor-pointer"
           onClick={() => handleCellClick(organisationId, eventData.id, row.original.id)}
         >
-          {row.getValue('startDate')}
+          {format(new Date(row.getValue('startDate')), 'HH:mm | dd-MM-yyyy')}
         </div>
       ),
     },
@@ -63,7 +65,7 @@ export const useEditionColumns = ({organisationId, eventData, onChange}: Columns
           className="cursor-pointer"
           onClick={() => handleCellClick(organisationId, eventData.id, row.original.id)}
         >
-          {row.getValue('endDate')}
+          {format(new Date(row.getValue('endDate')), 'HH:mm | dd-MM-yyyy')}
         </div>
       ),
     },
