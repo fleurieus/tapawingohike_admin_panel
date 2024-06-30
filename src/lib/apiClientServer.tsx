@@ -17,11 +17,8 @@ apiServerClient.interceptors.request.use(
       const token = cookieStore.get('jwtToken')?.value;
 
       if (token) {
-        console.log("Setting Authorization header with token:", token);
         config.headers['Authorization'] = `Bearer ${token}`;
-      } else {
-        console.log("No token found in cookies for Authorization header.");
-      }
+      } 
 
       return config;
     },
@@ -36,12 +33,10 @@ apiServerClient.interceptors.response.use(
         originalRequest._retry = true;
 
         try {
-          console.log("Attempting to refresh.ts token.");
           const cookieStore = cookies();
           const refreshToken = cookieStore.get('refreshToken')?.value;
 
           if (!refreshToken) {
-            console.log("No refresh.ts token found.");
             return Promise.reject(error);
           }
 
@@ -52,7 +47,6 @@ apiServerClient.interceptors.response.use(
           if (response.status === 200) {
             const { jwtToken, refreshToken: newRefreshToken, expiration } = response.data;
 
-            console.log("Successfully refreshed token.");
             cookies().set('jwtToken', jwtToken, {secure: true, expires: new Date(expiration)});
             cookies().set('refreshToken', newRefreshToken, {secure: true, expires: new Date(expiration)});
 

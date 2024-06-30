@@ -28,7 +28,6 @@ const MapComponent = (startLocation: L.LatLng = L.latLng(52, 7)) => {
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log(position.coords);
           const { latitude, longitude } = position.coords;
           setLocation(new L.LatLng(latitude, longitude));
         },
